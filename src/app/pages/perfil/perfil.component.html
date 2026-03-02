@@ -1,0 +1,71 @@
+<div class="perfil-container" *ngIf="alumno">
+
+  <header class="top-bar">
+    <button class="btn-icon" (click)="regresar()">
+      <span style="font-size: 24px;">&#8592;</span> </button>
+    <h1>Perfil</h1>
+    <div class="spacer"></div>
+  </header>
+
+  <div class="profile-header">
+    <div class="avatar-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" height="60" viewBox="0 96 960 960" width="60" fill="white">
+        <path d="M480 576q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM240 896v-60q0-38 19-69t52-48q56-25 106.5-39T480 666q49 0 102 14t109 39q35 18 53 49t18 68v60H240Z"/>
+      </svg>
+    </div>
+    <h2 class="student-name">
+      {{ alumno.nombre }} {{ alumno.apPaterno }} {{ alumno.apMaterno }}
+    </h2>
+  </div>
+
+  <div class="info-cards">
+
+    <div class="info-card">
+      <div class="icon-box">🪪</div>
+      <div class="data">
+        <label>Matrícula:</label>
+        <strong>{{ alumno.matricula }}</strong>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="icon-box">🎓</div>
+      <div class="data">
+        <label>Carrera:</label>
+        <strong>{{ alumno.nombreCarrera }}</strong>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="icon-box">⭐</div>
+      <div class="data">
+        <label>Promedio:</label>
+        <strong>{{ promedioGeneral | number:'1.1-1' }}</strong>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="btn-outline" (click)="cambiarPassword()">
+    Cambiar contraseña
+  </button>
+
+  <div class="barcode-container" style="text-align: center; margin-top: 20px;">
+    <app-codigo-barras [valor]="alumno.matricula"></app-codigo-barras>
+  </div>
+
+  <!--<div class="action-buttons">
+    <button class="btn-action" (click)="descargarHistorial()">
+      DESCARGAR HISTORIAL ACADÉMICO
+    </button>
+
+    <button class="btn-action" (click)="descargarConstancia()">
+      DESCARGAR CONSTANCIA DE ESTUDIOS
+    </button>
+
+    <button class="btn-primary" (click)="regresar()">
+      REGRESAR
+    </button>
+  </div>-->
+
+</div>

@@ -1,0 +1,8 @@
+{
+  "/vm2": {
+    "target": "http://201.144.254.11",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

@@ -1,0 +1,133 @@
+.notificaciones-container {
+  background-color: #E0F2F1; /* Verde menta Android */
+  min-height: 100vh;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Barra Superior */
+.top-bar {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.top-bar h1 {
+  font-size: 1.2rem;
+  color: #000;
+  margin: 0;
+  font-weight: 600;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+.material-icons { font-style: normal; } /* Simple corrección si no cargas iconos */
+.spacer { width: 24px; }
+
+
+/* Lista de Tarjetas */
+.cards-list {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Estilo de la Tarjeta */
+.aviso-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  gap: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.1s;
+}
+
+.aviso-card:hover {
+  transform: translateY(-2px); /* Pequeño efecto al pasar el mouse */
+}
+
+/* Icono Morado */
+.icon-section {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 5px;
+}
+
+.bell-icon {
+  width: 32px;
+  height: 32px;
+  fill: #7B1FA2; /* Morado Oscuro (Purple 700) */
+}
+
+/* Contenido de Texto */
+.content-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.aviso-title {
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #000;
+  text-transform: lowercase; /* Para que coincida con tu captura 'aviso' */
+}
+.aviso-title::first-letter {
+  text-transform: uppercase;
+}
+
+.aviso-body {
+  margin: 0 0 10px 0;
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.4;
+  /* Limitar líneas si quieres (como en Android) */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Pie de tarjeta (Remitente y Fecha) */
+.aviso-footer {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: #757575; /* Gris */
+  gap: 4px;
+}
+
+.sender {
+  font-style: italic;
+}
+
+/* Estados (Carga y Vacío) */
+.loading-state, .empty-state, .error-msg {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+.error-msg { color: #D32F2F; }

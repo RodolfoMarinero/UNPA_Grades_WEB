@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login';
-import {HomeComponent} from './pages/home/home';
+import {Home} from './pages/home/home';
 import {PerfilComponent} from './pages/perfil/perfil.component';
-import {CambiarPasswordComponent} from './pages/cambiar-password/cambiar-password';
+import {CambiarPassword} from './pages/cambiar-password/cambiar-password';
 import {NotificacionesComponent} from './pages/notificaciones/notificaciones.component';
 import {CalendarioComponent} from './pages/calendario/calendario';
 
@@ -15,11 +15,11 @@ export const routes: Routes = [
 
   { path: 'perfil', component: PerfilComponent},
 
-  {path: 'cambiar-password', component: CambiarPasswordComponent},
+  {path: 'cambiar-password', component: CambiarPassword},
 
   { path: 'notificaciones', component: NotificacionesComponent},
 
   { path: 'calendario', component: CalendarioComponent },
 
-  { path: 'home', component: HomeComponent }
+  { path: 'home', component: Home }
 ];

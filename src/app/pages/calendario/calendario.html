@@ -1,0 +1,46 @@
+<div class="page-container">
+
+  <header class="header">
+    <button class="btn-icon" (click)="regresar()">
+      <span style="font-size: 24px;">&#8592;</span>
+    </button>
+    <h1>Calendario de Exámenes</h1>
+    <div class="spacer"></div>
+  </header>
+
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="exam-table">
+        <thead>
+        <tr>
+          <th class="col-materia">Materia</th>
+          <th>1er Parcial</th>
+          <th>2do Parcial</th>
+          <th>3er Parcial</th>
+          <th class="col-highlight">Ordinario</th>
+          <th>Extra 1</th>
+          <th>Extra 2</th>
+          <th class="col-danger">Especial</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let ex of examenes">
+          <td class="col-materia" data-label="Materia">{{ ex.materia }}</td>
+          <td data-label="1er">{{ ex.p1 || '-' }}</td>
+          <td data-label="2do">{{ ex.p2 || '-' }}</td>
+          <td data-label="3er">{{ ex.p3 || '-' }}</td>
+          <td class="col-highlight" data-label="Ord">{{ ex.f || '-' }}</td>
+          <td data-label="Ex1">{{ ex.e1 || '-' }}</td>
+          <td data-label="Ex2">{{ ex.e2 || '-' }}</td>
+          <td class="col-danger" data-label="Esp">{{ ex.esp || '-' }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="examenes.length === 0" class="empty-state">
+      <p>No hay calendarios disponibles para este ciclo.</p>
+    </div>
+  </div>
+
+</div>

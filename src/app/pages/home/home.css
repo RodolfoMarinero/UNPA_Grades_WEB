@@ -1,0 +1,200 @@
+/* --- LAYOUT GENERAL --- */
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #E0F2F1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative; /* Necesario para el overlay */
+}
+
+/* --- OVERLAY (FONDO OSCURO) --- */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5); /* Semi-transparente */
+  z-index: 99; /* Por debajo del menú, por encima del contenido */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- BARRA LATERAL (MENU) --- */
+.sidebar {
+  position: fixed; /* Siempre fijo a la izquierda */
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 280px;
+  background-color: white;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  z-index: 100; /* Lo más alto */
+
+  /* ANIMACIÓN */
+  transform: translateX(-100%); /* Escondido a la izquierda */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Clase para mostrar el menú */
+.sidebar.active {
+  transform: translateX(0); /* Posición original (visible) */
+}
+
+/* (El resto de estilos del sidebar internos se mantienen igual...) */
+.sidebar-header { text-align: center; margin-bottom: 30px; }
+.sidebar-logo { width: 100px; margin-bottom: 10px; }
+.sidebar-header h3 { font-size: 0.9rem; color: #000; margin: 0; font-weight: bold; }
+.subtitle { font-size: 0.8rem; color: #666; }
+.menu-list { list-style: none; padding: 0; }
+.menu-item { padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #333; font-weight: 500; transition: background 0.2s; }
+.menu-item:hover { background-color: #f0f0f0; }
+.menu-item.active { background-color: #F3E5F5; color: #7B1FA2; font-weight: bold; }
+.menu-item.logout { margin-top: auto; color: #d32f2f; }
+
+/* --- CONTENIDO PRINCIPAL --- */
+.main-content {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* --- BARRA SUPERIOR NUEVA --- */
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espacio entre hamburguesa y título */
+  margin-bottom: 20px;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #333;
+  padding: 5px;
+}
+
+.top-bar h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* --- ESTILOS DE TABLA Y TARJETAS (IGUAL QUE ANTES) --- */
+.student-info-card { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.mini-logo { width: 60px; }
+.student-details { flex: 1; padding: 0 20px; }
+.student-details h2 { font-size: 1.1rem; margin: 0; color: #000; font-weight: bold; text-transform: uppercase; }
+.student-details p { font-size: 0.9rem; margin: 2px 0; color: #555; }
+.profile-icon { background-color: #2196F3; color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; }
+.section-title { text-align: center; font-size: 1rem; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; }
+.period-selector { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; max-width: 400px; margin-left: auto; margin-right: auto; }
+.arrow-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.arrow-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.period-text { background: white; padding: 8px 20px; border-radius: 5px; border: 1px solid #ddd; font-weight: bold; flex: 1; text-align: center; }
+.grades-card { background-color: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; overflow-x: auto; }
+.grades-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.grades-table th { text-align: center; padding: 12px 8px; border-bottom: 2px solid #f0f0f0; color: #444; font-weight: 600; }
+.grades-table td { padding: 12px 8px; text-align: center; color: #333; border-bottom: 1px solid #f5f5f5; }
+.materia-name { text-align: left !important; font-weight: 500; }
+.btn-download { width: 100%; background-color: #C8E6C9; color: #2E7D32; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; transition: transform 0.2s; }
+.btn-download:hover { transform: translateY(-2px); background-color: #A5D6A7; }
+
+/* --- SELECTOR DE PERIODO MEJORADO --- */
+.period-selector-container {
+  position: relative; /* Para posicionar la lista absoluta */
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+}
+
+.period-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.period-display {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 8px 15px;
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.period-display:hover {
+  background-color: #f9f9f9;
+}
+
+.period-text {
+  font-weight: bold;
+  color: #333;
+}
+
+.dropdown-icon {
+  font-size: 0.7rem;
+  color: #666;
+}
+
+/* Lista Desplegable Flotante */
+.cycles-dropdown {
+  position: absolute;
+  top: 100%; /* Justo debajo del control */
+  left: 50px; /* Ajuste para centrar respecto a las flechas */
+  right: 50px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  list-style: none;
+  padding: 5px 0;
+  margin-top: 5px;
+  z-index: 50; /* Por encima de la tabla */
+  max-height: 200px;
+  overflow-y: auto; /* Scroll si son muchos ciclos */
+}
+
+.cycles-dropdown li {
+  padding: 10px 15px;
+  text-align: center;
+  cursor: pointer;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.cycles-dropdown li:hover {
+  background-color: #E0F2F1; /* Verde clarito al pasar mouse */
+}
+
+.cycles-dropdown li.selected {
+  background-color: #B2DFDB; /* Verde más fuerte para el seleccionado */
+  font-weight: bold;
+  color: #00695C;
+}
+
+/* Scrollbar bonita para la lista */
+.cycles-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.cycles-dropdown::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}

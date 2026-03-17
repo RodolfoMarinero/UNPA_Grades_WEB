@@ -1,0 +1,166 @@
+/* --- LAYOUT GENERAL --- */
+.page-container {
+  background-color: #E0F2F1; /* Tu color menta original */
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+}
+
+/* --- HEADER --- */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 10px;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  color: #00695C; /* Un verde más oscuro para contraste */
+  margin: 0;
+  font-weight: 700;
+}
+
+.btn-back {
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-back:active {
+  transform: scale(0.95);
+}
+
+.spacer { flex: 1; }
+
+/* --- TARJETA DE TABLA --- */
+.table-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 105, 92, 0.1); /* Sombra suave verdosa */
+  overflow: hidden; /* Para redondear esquinas de la tabla */
+  padding-bottom: 10px;
+}
+
+.table-responsive {
+  overflow-x: auto; /* Scroll horizontal si es necesario */
+  width: 100%;
+}
+
+/* --- ESTILOS DE LA TABLA --- */
+.exam-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px; /* Ancho mínimo para que no se apriete */
+}
+
+/* Cabecera */
+.exam-table thead th {
+  background-color: #00897B; /* Verde principal */
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Filas */
+.exam-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.exam-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.exam-table tbody tr:hover {
+  background-color: #F0FBF9; /* Verde muy clarito al pasar mouse */
+}
+
+/* Celdas */
+.exam-table td {
+  padding: 12px 15px;
+  text-align: center;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+/* Columna Materia (Sticky a la izquierda) */
+.col-materia {
+  position: sticky;
+  left: 0;
+  background-color: white; /* Necesario para tapar lo que pasa por debajo */
+  text-align: left !important;
+  font-weight: bold;
+  color: #004D40;
+  min-width: 200px;
+  border-right: 2px solid #f0f0f0;
+  z-index: 2;
+}
+
+.exam-table thead th.col-materia {
+  background-color: #00796B; /* Ligeramente diferente para distinguir header */
+  z-index: 3;
+}
+
+/* Columnas Especiales */
+.col-highlight {
+  background-color: #E0F7FA; /* Azulito muy suave para Ordinario */
+  font-weight: 600;
+  color: #006064;
+}
+.exam-table thead th.col-highlight {
+  background-color: #00ACC1;
+}
+
+.col-danger {
+  color: #C62828; /* Rojo suave para Especial */
+  font-weight: 600;
+}
+.exam-table thead th.col-danger {
+  background-color: #E57373;
+}
+
+/* Estado Vacío */
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+/* --- RESPONSIVE PARA MÓVILES MUY PEQUEÑOS --- */
+@media (max-width: 600px) {
+  .col-materia {
+    min-width: 140px;
+    font-size: 0.85rem;
+  }
+  .exam-table td, .exam-table th {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}

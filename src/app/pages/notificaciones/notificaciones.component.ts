@@ -1,7 +1,7 @@
 import {Component, OnInit, inject, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth';
+import { Auth } from '../../services/auth';
 import { Aviso } from '../../interfaces/aviso';
 
 @Component({
@@ -13,7 +13,7 @@ import { Aviso } from '../../interfaces/aviso';
 })
 export class NotificacionesComponent implements OnInit {
 
-  private authService = inject(AuthService);
+  private authService = inject(Auth);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
@@ -30,7 +30,7 @@ export class NotificacionesComponent implements OnInit {
     this.cargando = true;
     const matricula = this.authService.alumnoActual?.matricula || '00000000';
 
-    this.authService.getAvisos(matricula).subscribe({
+    this.authService.getAvisos().subscribe({
       next: (data: any) => {
         // ... (Tu lógica de mapeo que ya funciona bien) ...
 

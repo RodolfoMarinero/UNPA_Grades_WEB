@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth';
+import { Auth } from '../../services/auth';
 import { AlumnoData } from '../../interfaces/alumno';
 import {CodigoBarrasComponent} from '../../components/codigo-barras/codigo-barras'; // <--- Usamos TU interfaz
 
@@ -14,7 +14,7 @@ import {CodigoBarrasComponent} from '../../components/codigo-barras/codigo-barra
 })
 export class PerfilComponent implements OnInit {
 
-  private authService = inject(AuthService);
+  private authService = inject(Auth);
   private router = inject(Router);
 
   // Usamos AlumnoData tal cual lo tienes

@@ -1,8 +1,10 @@
 {
   "/vm2": {
-    "target": "http://201.144.254.11",
+    "target": "https://calificaciones.unpa.edu.mx/",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   }
 }
+
+

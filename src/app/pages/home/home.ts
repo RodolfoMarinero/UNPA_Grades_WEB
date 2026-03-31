@@ -19,39 +19,26 @@ export class Home implements OnInit {
   private authService = inject(Auth);
   private cdr = inject(ChangeDetectorRef);
 
-
+  // Variables del Menú (Las dejamos por si en el futuro regresas a la versión móvil)
   menuVisible: boolean = false;
+  toggleMenu() { this.menuVisible = !this.menuVisible; }
+  cerrarMenu() { this.menuVisible = false; }
 
-  // Función para abrir/cerrar
-  toggleMenu() {
-    this.menuVisible = !this.menuVisible;
-  }
-
-  // Función para cerrar el menú cuando se hace clic fuera (opcional pero recomendada)
-  cerrarMenu() {
-    this.menuVisible = false;
-  }
-
-  // Variable nueva para mostrar/ocultar la lista de ciclos
+  // Control del Selector de Ciclos (Dropdown)
   mostrarListaCiclos: boolean = false;
-
-  // Función para alternar la visibilidad de la lista
   toggleListaCiclos() {
     this.mostrarListaCiclos = !this.mostrarListaCiclos;
   }
-
-  // Función para seleccionar un ciclo específico de la lista
   seleccionarCiclo(indice: number) {
     this.indiceCicloActual = indice;
     this.actualizarTabla();
-    this.mostrarListaCiclos = false; // Cerrar la lista al seleccionar
+    this.mostrarListaCiclos = false;
   }
 
-  // Variables para la vista
-  alumno: AlumnoData | null = null; // Datos completos
-  materiasFiltradas: Materia[] = []; // Las que se ven en la tabla
-
-  materiasConExtra: Materia[] = [];
+  // Variables de Datos
+  alumno: AlumnoData | null = null;
+  materiasFiltradas: any[] = []; // Usamos any[] o Materia[] (si actualizaste la interfaz) para soportar isExpanded
+  materiasConExtra: any[] = [];
 
   // Control de ciclos escolares
   ciclosDisponibles: string[] = [];
@@ -66,23 +53,19 @@ export class Home implements OnInit {
     const matricula = localStorage.getItem('matricula');
 
     if (!matricula) {
-      this.logout(); // Si no hay matrícula, sacar al usuario
+      this.logout();
       return;
     }
 
     this.authService.getAlumnoCompleto(matricula).subscribe({
       next: (data) => {
         this.alumno = data;
-        console.log('🔥 ¡DATOS RECIBIDOS DEL SERVIDOR! 🔥');
-        console.log(data);
 
-        const listaMaterias = data.materias || [];
-        // 1. Extraer todos los ciclos únicos (2021-A, 2022-B, etc.)
+        // Extraer y ordenar ciclos
         const ciclosUnicos = new Set(data.materias.map(m => m.ciclo));
-        // Convertir a array y ordenarlos (los más nuevos primero)
         this.ciclosDisponibles = Array.from(ciclosUnicos).sort().reverse();
 
-        // 2. Seleccionar el más reciente por defecto (el primero de la lista)
+        // Seleccionar el más reciente
         if (this.ciclosDisponibles.length > 0) {
           this.indiceCicloActual = 0;
           this.actualizarTabla();
@@ -97,28 +80,25 @@ export class Home implements OnInit {
     });
   }
 
-  // Función para cambiar periodo con las flechas
   cambiarCiclo(direccion: number) {
     const nuevoIndice = this.indiceCicloActual + direccion;
-
-    // Validar que no se salga del arreglo
     if (nuevoIndice >= 0 && nuevoIndice < this.ciclosDisponibles.length) {
       this.indiceCicloActual = nuevoIndice;
       this.actualizarTabla();
     }
   }
 
-  // Filtra las materias según el ciclo seleccionado
   actualizarTabla() {
     this.periodoActual = this.ciclosDisponibles[this.indiceCicloActual];
 
     if (this.alumno) {
-      // Filtro normal (todas las materias del ciclo)
-      this.materiasFiltradas = this.alumno.materias.filter(
-        m => m.ciclo === this.periodoActual
-      );
+      // 🔥 MAGIA AQUÍ: Filtramos y les agregamos isExpanded: false por defecto
+      // Así, al cambiar de semestre, todas las tarjetas aparecen cerradas ordenadamente.
+      this.materiasFiltradas = this.alumno.materias
+        .filter(m => m.ciclo === this.periodoActual)
+        .map(m => ({ ...m, isExpanded: false }));
 
-      // Filtro de Extras: Solo las que tengan algún valor en extra1, extra2 o especial
+      // Filtro de Extras
       this.materiasConExtra = this.materiasFiltradas.filter(m =>
         m.calificaciones.extra1 !== null ||
         m.calificaciones.extra2 !== null ||
@@ -128,16 +108,16 @@ export class Home implements OnInit {
   }
 
   getPromedio(cal: any): number {
-    const p1 = cal.parcial1 || 0; // Si es null, vale 0
+    const p1 = cal.parcial1 || 0;
     const p2 = cal.parcial2 || 0;
     const p3 = cal.parcial3 || 0;
-
     return (p1 + p2 + p3) / 3;
   }
 
-  irAlPerfil() {
-    this.router.navigate(['/perfil']);
-  }
+  irAlPerfil() { this.router.navigate(['/perfil']); }
+  irANotificaciones() { this.router.navigate(['/notificaciones']); }
+  irACalendarioExamenes() { this.router.navigate(['/calendario']); }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('matricula');
@@ -147,22 +127,16 @@ export class Home implements OnInit {
   descargarPDF() {
     if (!this.alumno) return;
 
-    // 1. Crear documento (Orientación vertical 'p', unidad 'mm', formato 'a4')
     const doc = new jsPDF('p', 'mm', 'a4');
     const margenIzquierdo = 14;
-    let posicionY = 20; // Equivalente a tu variable 'y' en Android
+    let posicionY = 20;
 
-    // --------------------------------------------------
-    // 2. ENCABEZADOS (Igual que en tu Android Canvas)
-    // --------------------------------------------------
-
-    // Título
+    // Encabezados
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Reporte de Calificaciones', margenIzquierdo, posicionY);
     posicionY += 10;
 
-    // Datos del Alumno
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text(`Nombre: ${this.alumno.nombre} ${this.alumno.apPaterno} ${this.alumno.apMaterno}`, margenIzquierdo, posicionY);
@@ -171,20 +145,16 @@ export class Home implements OnInit {
     posicionY += 6;
     doc.text(`Carrera: ${this.alumno.nombreCarrera}`, margenIzquierdo, posicionY);
     posicionY += 6;
-    doc.text(`Periodo: ${this.periodoActual}`, margenIzquierdo, posicionY); // Agregamos el ciclo escolar
-    posicionY += 10; // Espacio antes de la tabla
+    doc.text(`Periodo: ${this.periodoActual}`, margenIzquierdo, posicionY);
+    posicionY += 10;
 
-    // --------------------------------------------------
-    // 3. TABLA DE CALIFICACIONES (Reemplaza tu 'for' manual)
-    // --------------------------------------------------
-
-    // Preparamos los datos para la tabla (Array de Arrays)
+    // Tabla de Ordinarios
     const cuerpoTabla = this.materiasFiltradas.map(m => [
       m.materia,
       this.formatearNota(m.calificaciones.parcial1),
       this.formatearNota(m.calificaciones.parcial2),
       this.formatearNota(m.calificaciones.parcial3),
-      this.getPromedio(m.calificaciones).toFixed(1), // Usamos tu función de promedio
+      this.getPromedio(m.calificaciones).toFixed(1),
       this.formatearNota(m.calificaciones.ordinario),
       this.formatearNota(m.calificaciones.pfinal)
     ]);
@@ -193,32 +163,25 @@ export class Home implements OnInit {
       startY: posicionY,
       head: [['Materia', '1er', '2o', '3er', 'Prom', 'Ord', 'Final']],
       body: cuerpoTabla,
-      theme: 'grid', // Estilo de tabla limpio
-      headStyles: { fillColor: [22, 160, 133], textColor: 255 }, // Color verde UNPA aproximado
+      theme: 'grid',
+      headStyles: { fillColor: [15, 76, 58], textColor: 255 }, // Ajustado al verde oscuro institucional #0F4C3A
       styles: { fontSize: 9 },
-      columnStyles: {
-        0: { cellWidth: 80 } // Ancho mayor para la columna Materia (wrap automático)
-      },
-      // Lógica para pintar rojos los reprobados (Opcional, similar a tu Android)
+      columnStyles: { 0: { cellWidth: 80 } },
       didParseCell: (data) => {
         if (data.section === 'body' && data.column.index > 0) {
           const valor = parseFloat(data.cell.raw as string);
           if (valor < 6.0) {
-            data.cell.styles.textColor = [200, 0, 0]; // Rojo
+            data.cell.styles.textColor = [211, 47, 47]; // Rojo institucional (#D32F2F)
           }
         }
       }
     });
 
-    // Actualizamos la posición Y al final de la tabla automática
-    // @ts-ignore (Para evitar error de tipado en versiones viejas de TS)
+    // @ts-ignore
     posicionY = doc.lastAutoTable.finalY + 15;
 
-    // --------------------------------------------------
-    // 4. TABLA DE EXTRAORDINARIOS (Si existen)
-    // --------------------------------------------------
+    // Tabla de Extras
     if (this.materiasConExtra.length > 0) {
-
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.text('Calificaciones Extraordinarias', margenIzquierdo, posicionY);
@@ -236,28 +199,17 @@ export class Home implements OnInit {
         head: [['Materia', 'Extra 1', 'Extra 2', 'Especial']],
         body: cuerpoExtra,
         theme: 'striped',
-        headStyles: { fillColor: [192, 57, 43] }, // Rojo para extras
+        headStyles: { fillColor: [211, 47, 47] }, // Rojo para extras
         columnStyles: { 0: { cellWidth: 90 } }
       });
     }
 
-    // --------------------------------------------------
-    // 5. GUARDAR ARCHIVO
-    // --------------------------------------------------
-    const nombreArchivo = `calificaciones_${this.alumno.matricula}.pdf`;
-    doc.save(nombreArchivo);
+    doc.save(`calificaciones_${this.alumno.matricula}.pdf`);
   }
 
-  // Pequeña ayuda para formatear nulos a guiones (como en tu HTML)
   formatearNota(valor: number | null): string {
     return (valor !== null && valor !== undefined) ? valor.toFixed(1) : '-';
   }
 
-  irANotificaciones() {
-    this.router.navigate(['/notificaciones']);
-  }
-
-  irACalendarioExamenes() {
-    this.router.navigate(['/calendario']);
-  }
+  irAHome() { this.router.navigate(['/home']); }
 }

@@ -56,7 +56,9 @@ export class CambiarPassword {
     this.mensajeExito = '';
 
     // 1. OBTENER MATRÍCULA (Del servicio o de la URL)
-    const matricula = this.authService.alumnoActual?.matricula || this.matriculaUrl;
+    const matriculaGuardada = localStorage.getItem('matricula');
+
+    const matricula = matriculaGuardada || this.authService.alumnoActual?.matricula || this.matriculaUrl;
 
     if (!matricula) {
       this.mensajeError = 'Error: No se pudo identificar al usuario.';

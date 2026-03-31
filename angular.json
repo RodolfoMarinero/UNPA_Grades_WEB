@@ -24,7 +24,8 @@
                 "input": "public"
               },
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.ico",
+              "src/icono.png"
             ],
             "styles": [
               "src/styles.css"
@@ -62,7 +63,7 @@
           "configurations": {
             "production": {
               "buildTarget": "UNPAGradesWEB:build:production"
-            },s
+            },
             "development": {
               "buildTarget": "UNPAGradesWEB:build:development"
             }

@@ -1,200 +1,169 @@
-/* --- LAYOUT GENERAL --- */
+/* =========================================
+   1. VARIABLES Y LAYOUT BASE
+========================================= */
+:host {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --primary-dark: #0F4C3A;
+  --primary-light: #5D9B9B;
+  --unpa-teal: #007A66; /* Verde-Cian del Figma */
+  --bg-app: #EAEAEA;
+  --text-main: #333333;
+  --card-bg: #FFFFFF;
+}
+
 .dashboard-container {
+  background-color: var(--bg-app);
   min-height: 100vh;
-  background-color: #E0F2F1;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  position: relative; /* Necesario para el overlay */
-}
-
-/* --- OVERLAY (FONDO OSCURO) --- */
-.menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5); /* Semi-transparente */
-  z-index: 99; /* Por debajo del menú, por encima del contenido */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s;
-}
-
-.menu-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* --- BARRA LATERAL (MENU) --- */
-.sidebar {
-  position: fixed; /* Siempre fijo a la izquierda */
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 280px;
-  background-color: white;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  z-index: 100; /* Lo más alto */
-
-  /* ANIMACIÓN */
-  transform: translateX(-100%); /* Escondido a la izquierda */
-  transition: transform 0.3s ease-in-out;
 }
 
-/* Clase para mostrar el menú */
-.sidebar.active {
-  transform: translateX(0); /* Posición original (visible) */
-}
+/* =========================================
+   2. CONTENIDO PRINCIPAL (Calificaciones)
+========================================= */
+.main-content { flex: 1; padding-top: 20px; padding-bottom: 40px; }
+.content-wrapper { padding: 0 15px; max-width: 800px; margin: 0 auto; }
 
-/* (El resto de estilos del sidebar internos se mantienen igual...) */
-.sidebar-header { text-align: center; margin-bottom: 30px; }
-.sidebar-logo { width: 100px; margin-bottom: 10px; }
-.sidebar-header h3 { font-size: 0.9rem; color: #000; margin: 0; font-weight: bold; }
-.subtitle { font-size: 0.8rem; color: #666; }
-.menu-list { list-style: none; padding: 0; }
-.menu-item { padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #333; font-weight: 500; transition: background 0.2s; }
-.menu-item:hover { background-color: #f0f0f0; }
-.menu-item.active { background-color: #F3E5F5; color: #7B1FA2; font-weight: bold; }
-.menu-item.logout { margin-top: auto; color: #d32f2f; }
+.section-title { font-size: 0.85rem; font-weight: bold; margin: 15px 0 15px 0; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+.extra-title { color: #D32F2F; margin-bottom: 10px; margin-top: 30px;}
 
-/* --- CONTENIDO PRINCIPAL --- */
-.main-content {
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* --- BARRA SUPERIOR NUEVA --- */
-.top-bar {
-  display: flex;
-  align-items: center;
-  gap: 15px; /* Espacio entre hamburguesa y título */
-  margin-bottom: 20px;
-}
-
-.menu-btn {
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  cursor: pointer;
-  color: #333;
-  padding: 5px;
-}
-
-.top-bar h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0;
-}
-
-/* --- ESTILOS DE TABLA Y TARJETAS (IGUAL QUE ANTES) --- */
-.student-info-card { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.mini-logo { width: 60px; }
-.student-details { flex: 1; padding: 0 20px; }
-.student-details h2 { font-size: 1.1rem; margin: 0; color: #000; font-weight: bold; text-transform: uppercase; }
-.student-details p { font-size: 0.9rem; margin: 2px 0; color: #555; }
-.profile-icon { background-color: #2196F3; color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; }
-.section-title { text-align: center; font-size: 1rem; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; }
-.period-selector { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; max-width: 400px; margin-left: auto; margin-right: auto; }
-.arrow-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.arrow-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.period-text { background: white; padding: 8px 20px; border-radius: 5px; border: 1px solid #ddd; font-weight: bold; flex: 1; text-align: center; }
-.grades-card { background-color: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; overflow-x: auto; }
-.grades-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-.grades-table th { text-align: center; padding: 12px 8px; border-bottom: 2px solid #f0f0f0; color: #444; font-weight: 600; }
-.grades-table td { padding: 12px 8px; text-align: center; color: #333; border-bottom: 1px solid #f5f5f5; }
-.materia-name { text-align: left !important; font-weight: 500; }
-.btn-download { width: 100%; background-color: #C8E6C9; color: #2E7D32; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; transition: transform 0.2s; }
-.btn-download:hover { transform: translateY(-2px); background-color: #A5D6A7; }
-
-/* --- SELECTOR DE PERIODO MEJORADO --- */
-.period-selector-container {
-  position: relative; /* Para posicionar la lista absoluta */
-  max-width: 400px;
-  margin: 0 auto 20px auto;
-}
-
-.period-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
+/* --- PERIOD SELECTOR (Figma Style) --- */
+.period-selector-container { position: relative; max-width: 400px; margin: 15px auto 30px auto; }
+.period-controls { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
 
 .period-display {
   background: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 8px 15px;
+  border: 1px solid #B0B0B0;
+  border-radius: 30px; /* Píldora completa */
+  padding: 10px 15px;
   flex: 1;
   text-align: center;
   cursor: pointer;
+  display: flex; justify-content: center; align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  transition: border-color 0.2s;
+}
+.period-display:hover { border-color: var(--unpa-teal); }
+
+.period-text { font-weight: 500; color: var(--unpa-teal); font-size: 1rem; }
+
+/* Triángulos Verdes */
+.arrow-btn { background: none; border: none; cursor: pointer; padding: 5px; display: flex; align-items: center;}
+.solid-arrow { width: 22px; height: 22px; fill: var(--unpa-teal); transition: transform 0.2s; }
+.arrow-btn:hover:not(:disabled) .solid-arrow { transform: scale(1.1); }
+.arrow-btn:disabled .solid-arrow { fill: #CCC; cursor: not-allowed; }
+
+.cycles-dropdown { position: absolute; top: 100%; left: 10%; right: 10%; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); list-style: none; padding: 8px 0; margin-top: 8px; z-index: 50; max-height: 200px; overflow-y: auto; }
+.cycles-dropdown li { padding: 10px 15px; text-align: center; cursor: pointer; color: #555; font-size: 0.85rem; }
+.cycles-dropdown li:hover { background-color: #F5F5F5; }
+.cycles-dropdown li.selected { background-color: var(--primary-light); color: white; font-weight: bold; }
+
+
+/* --- CABECERA VERDE (Materia | Cal. Def.) --- */
+.grades-header-pill {
+  background-color: var(--unpa-teal);
+  color: white;
+  border-radius: 30px;
+  padding: 14px 25px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  transition: background 0.2s;
-  user-select: none;
+  font-size: 1.05rem;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
+.header-left { font-weight: 500; }
+.header-right { font-weight: 500; padding-right: 35px; /* Espacio reservado para igualar el chevron de abajo */ }
 
-.period-display:hover {
-  background-color: #f9f9f9;
+
+/* --- MATERIA CARDS (Píldoras Blancas) --- */
+.grades-cards-list { display: flex; flex-direction: column; gap: 15px; }
+
+.subject-card {
+  background-color: white;
+  border-radius: 30px; /* Píldora */
+  border: 1px solid #C4C4C4; /* Contorno gris del Figma */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  overflow: hidden;
+  transition: all 0.2s ease;
 }
+.subject-card:hover { border-color: #A0A0A0; box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
 
-.period-text {
-  font-weight: bold;
-  color: #333;
-}
-
-.dropdown-icon {
-  font-size: 0.7rem;
-  color: #666;
-}
-
-/* Lista Desplegable Flotante */
-.cycles-dropdown {
-  position: absolute;
-  top: 100%; /* Justo debajo del control */
-  left: 50px; /* Ajuste para centrar respecto a las flechas */
-  right: 50px;
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  list-style: none;
-  padding: 5px 0;
-  margin-top: 5px;
-  z-index: 50; /* Por encima de la tabla */
-  max-height: 200px;
-  overflow-y: auto; /* Scroll si son muchos ciclos */
-}
-
-.cycles-dropdown li {
-  padding: 10px 15px;
-  text-align: center;
+.card-header {
+  padding: 14px 25px;
+  display: flex; justify-content: space-between; align-items: center;
   cursor: pointer;
-  color: #555;
-  font-size: 0.9rem;
 }
+.card-header:active { background-color: #F5F5F5; }
 
-.cycles-dropdown li:hover {
-  background-color: #E0F2F1; /* Verde clarito al pasar mouse */
-}
+.subject-name { font-size: 1rem; margin: 0; color: #333; font-weight: 400; flex: 1; }
 
-.cycles-dropdown li.selected {
-  background-color: #B2DFDB; /* Verde más fuerte para el seleccionado */
-  font-weight: bold;
-  color: #00695C;
-}
+.grade-summary { display: flex; align-items: center; gap: 20px; }
+.promedio-final { font-size: 1rem; font-weight: 500; color: #333; }
 
-/* Scrollbar bonita para la lista */
-.cycles-dropdown::-webkit-scrollbar {
-  width: 6px;
+/* Chevron Verde Grueso */
+.chevron-green { stroke: var(--unpa-teal); }
+.expand-icon { display: flex; align-items: center; transition: transform 0.3s ease; }
+.expand-icon.expanded { transform: rotate(180deg); }
+
+/* Detalles (Cuando se abre la píldora) */
+.card-details {
+  border-top: 1px solid #E0E0E0;
+  padding: 15px 25px;
+  background-color: #FAFAFA;
 }
-.cycles-dropdown::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 3px;
+.details-grid { display: flex; flex-direction: column; gap: 10px; }
+.detail-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #555; }
+.detail-item .label { color: #888; }
+.detail-item .value { font-weight: bold; color: #333; }
+.detail-item.divider { margin-top: 8px; padding-top: 8px; border-top: 1px solid #EEE; }
+.detail-item.final { margin-top: 10px; padding: 10px; border-radius: 8px; background-color: #F0F7F7; }
+.detail-item.final .label { color: var(--primary-dark); font-weight: bold; }
+.detail-item.final .value.final-grade { font-size: 1rem; }
+.value.bold { font-weight: bold !important; }
+
+/* Extraordinarios */
+.extraordinarios-container { margin-top: 20px;}
+.extra-grades-card { background: white; border-radius: 12px; padding: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
+.extra-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.extra-table th { color: #999; text-align: center; padding: 10px 5px; text-transform: uppercase; font-size: 0.7rem; }
+.extra-table td { padding: 12px 5px; text-align: center; border-top: 1px solid #F5F5F5; }
+.extra-table td.materia-name { text-align: left !important; color: #333; font-weight: 500; }
+
+.empty-state { text-align: center; padding: 30px; color: #999; font-style: italic; font-size: 0.85rem; }
+.actions-area { margin-top: 40px; }
+.btn-download { width: 100%; background-color: transparent; border: 2px solid var(--primary-dark); color: var(--primary-dark); padding: 15px; border-radius: 25px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.2s; }
+.btn-download:hover { background-color: var(--primary-dark); color: white; }
+
+/* Loader */
+.loading-state { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--bg-app); }
+.spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: var(--primary-dark); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
+/* =========================================
+   3. CABECERA UNIVERSAL (INTOCABLE)
+========================================= */
+.main-header {
+  background-color: var(--primary-dark);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  position: sticky; top: 0; z-index: 100; width: 100%;
+}
+.header-top { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px 0 20px; }
+.app-title { font-size: 1.3rem; font-weight: bold; margin: 0; letter-spacing: 0.5px; }
+.mini-logo { width: 50px; height: auto; filter: brightness(0) invert(1); }
+.top-nav ul { display: flex; list-style: none; padding: 0; margin: 15px 0 0 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.nav-item { flex: 1; text-align: center; padding: 15px 5px; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; position: relative; transition: all 0.2s ease; }
+.nav-item:hover { color: white; background-color: rgba(255,255,255,0.05); }
+.nav-item.active { color: white; }
+.nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 4px; background-color: white; border-radius: 4px 4px 0 0; }
+
+@media (max-width: 600px) {
+  .nav-item { font-size: 0.65rem; padding: 12px 2px; }
+  .app-title { font-size: 1.1rem; }
+  .mini-logo { width: 40px; }
+  .promedio-final { font-size: 1rem; }
+  .grades-header-pill { font-size: 0.95rem; padding: 12px 20px;}
+  .card-header { padding: 12px 20px;}
 }

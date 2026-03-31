@@ -1,46 +1,92 @@
-<div class="page-container">
+<div class="dashboard-container">
 
-  <header class="header">
-    <button class="btn-icon" (click)="regresar()">
-      <span style="font-size: 24px;">&#8592;</span>
-    </button>
-    <h1>Calendario de Exámenes</h1>
-    <div class="spacer"></div>
+  <header class="main-header">
+    <div class="header-top">
+      <h1 class="app-title">UNPA Grades</h1>
+      <img src="assets/logo_unpa.png" alt="Logo UNPA" class="mini-logo">
+    </div>
+
+    <nav class="top-nav">
+      <ul>
+        <li class="nav-item" (click)="irAHome()">CALIFICACIONES</li>
+        <li class="nav-item" (click)="irANotificaciones()">NOTIFICACIONES</li>
+        <li class="nav-item active" (click)="irACalendarioExamenes()">CALENDARIO</li>
+        <li class="nav-item" (click)="irAlPerfil()">PERFIL</li>
+      </ul>
+    </nav>
   </header>
 
-  <div class="table-card">
-    <div class="table-responsive">
-      <table class="exam-table">
-        <thead>
-        <tr>
-          <th class="col-materia">Materia</th>
-          <th>1er Parcial</th>
-          <th>2do Parcial</th>
-          <th>3er Parcial</th>
-          <th class="col-highlight">Ordinario</th>
-          <th>Extra 1</th>
-          <th>Extra 2</th>
-          <th class="col-danger">Especial</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let ex of examenes">
-          <td class="col-materia" data-label="Materia">{{ ex.materia }}</td>
-          <td data-label="1er">{{ ex.p1 || '-' }}</td>
-          <td data-label="2do">{{ ex.p2 || '-' }}</td>
-          <td data-label="3er">{{ ex.p3 || '-' }}</td>
-          <td class="col-highlight" data-label="Ord">{{ ex.f || '-' }}</td>
-          <td data-label="Ex1">{{ ex.e1 || '-' }}</td>
-          <td data-label="Ex2">{{ ex.e2 || '-' }}</td>
-          <td class="col-danger" data-label="Esp">{{ ex.esp || '-' }}</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="view-container">
+    <main class="main-content">
 
-    <div *ngIf="examenes.length === 0" class="empty-state">
-      <p>No hay calendarios disponibles para este ciclo.</p>
+      <div class="calendar-header-titles">
+        <h2>Calendario Escolar</h2>
+        <p>{{ periodo }}</p>
+      </div>
+
+      <div class="calendar-layout">
+
+        <div class="months-column">
+          <div class="months-grid">
+            <div class="month-card" *ngFor="let mes of meses">
+              <h3 class="month-title">{{ mes.nombre }}</h3>
+              <div class="days-header">
+                <span *ngFor="let d of diasSemana">{{ d }}</span>
+              </div>
+              <div class="days-grid">
+                <div class="day empty" *ngFor="let e of mes.espacios"></div>
+                <div class="day" *ngFor="let dia of mes.dias">
+                  <span class="day-number"
+                        [ngClass]="dia.tipo"
+                        (click)="onDayClick(dia)"
+                        [style.cursor]="dia.tipo === 'morado' ? 'pointer' : 'default'">
+                    {{ dia.num }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="events-column">
+          <div class="events-list">
+            <div class="event-pill" *ngFor="let ev of eventos">
+              <div class="hex-badge">
+                <div class="hex-inner">
+                  <span class="badge-day">{{ ev.dia }}</span>
+                  <span class="badge-month">{{ ev.mesStr }}</span>
+                </div>
+              </div>
+
+              <div class="event-text-container">
+                <span class="event-type">{{ ev.tipoExamen }}</span>
+                <span class="event-materia">{{ ev.materia }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ tituloModal }}</h3>
+      <button class="btn-close" (click)="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="exam-detail-item" *ngFor="let ex of eventosModal">
+        <div class="exam-info">
+          <p class="exam-materia"><strong>Materia:</strong> {{ ex.materia }}</p>
+          <p class="exam-tipo"><strong>Tipo:</strong> {{ ex.tipoExamen }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-entendido" (click)="cerrarModal()">Entendido</button>
     </div>
   </div>
-
 </div>

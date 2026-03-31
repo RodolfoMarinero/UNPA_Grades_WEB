@@ -1,133 +1,109 @@
+/* =========================================
+   1. VARIABLES Y LAYOUT BASE
+========================================= */
+:host {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --primary-dark: #0F4C3A;
+  --primary-light: #5D9B9B;
+  --bg-app: #EAEAEA;
+  --text-main: #333333;
+  --card-bg: #FFFFFF;
+}
+
 .notificaciones-container {
-  background-color: #E0F2F1; /* Verde menta Android */
+  background-color: var(--bg-app);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================
+   2. CONTENIDO PRINCIPAL (Notificaciones)
+========================================= */
+.main-content {
+  flex: 1;
   padding: 20px;
-  font-family: 'Roboto', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Barra Superior */
-.top-bar {
-  width: 100%;
-  max-width: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
+.page-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #111;
+  margin: 10px 0 30px 0;
+  letter-spacing: 0.5px;
 }
 
-.top-bar h1 {
-  font-size: 1.2rem;
-  color: #000;
-  margin: 0;
-  font-weight: 600;
-}
-
-.btn-icon {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #333;
-}
-.material-icons { font-style: normal; } /* Simple corrección si no cargas iconos */
-.spacer { width: 24px; }
-
-
-/* Lista de Tarjetas */
 .cards-list {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
-/* Estilo de la Tarjeta */
-.aviso-card {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  gap: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: transform 0.1s;
+/* --- ESTRUCTURA DEL AVISO --- */
+.aviso-wrapper { display: flex; align-items: center; gap: 15px; width: 100%; }
+.aviso-date { color: #888; font-size: 0.75rem; font-weight: 600; width: 60px; text-align: right; flex-shrink: 0; }
+
+.aviso-pill {
+  flex: 1; border-radius: 20px; padding: 18px 20px; color: white;
+  display: flex; align-items: flex-start; gap: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;
+}
+.aviso-pill:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+
+/* Colores alternados */
+.aviso-wrapper:nth-child(5n + 1) .aviso-pill { background-color: #8B0000; }
+.aviso-wrapper:nth-child(5n + 2) .aviso-pill { background-color: #8B6508; }
+.aviso-wrapper:nth-child(5n + 3) .aviso-pill { background-color: #003380; }
+.aviso-wrapper:nth-child(5n + 4) .aviso-pill { background-color: #4B0082; }
+.aviso-wrapper:nth-child(5n + 5) .aviso-pill { background-color: #006B3C; }
+
+/* Contenido interno */
+.icon-section { display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+.bell-icon { width: 24px; height: 24px; fill: white; }
+.content-section { display: flex; flex-direction: column; }
+.aviso-title { margin: 0 0 5px 0; font-size: 1.05rem; font-weight: bold; }
+.aviso-title::first-letter { text-transform: uppercase; }
+.aviso-body { margin: 0 0 8px 0; font-size: 0.9rem; line-height: 1.4; opacity: 0.95; }
+.sender { font-size: 0.75rem; font-style: italic; opacity: 0.7; }
+
+/* Estados */
+.loading-state, .empty-state, .error-msg { text-align: center; padding: 50px 20px; color: #666; display: flex; flex-direction: column; align-items: center; }
+.spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: var(--primary-dark); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.empty-icon { font-size: 3rem; display: block; margin-bottom: 15px; opacity: 0.5; }
+.error-msg { color: #D32F2F; font-weight: bold; }
+
+@media (max-width: 600px) {
+  .aviso-wrapper { flex-direction: column; align-items: flex-start; gap: 5px; }
+  .aviso-date { text-align: left; padding-left: 15px; width: auto; color: #666;}
+  .aviso-pill { width: 100%; box-sizing: border-box; }
 }
 
-.aviso-card:hover {
-  transform: translateY(-2px); /* Pequeño efecto al pasar el mouse */
+/* =========================================
+   3. CABECERA UNIVERSAL (INTOCABLE)
+========================================= */
+.main-header {
+  background-color: var(--primary-dark);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  position: sticky; top: 0; z-index: 100; width: 100%;
 }
+.header-top { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px 0 20px; }
+.app-title { font-size: 1.3rem; font-weight: bold; margin: 0; letter-spacing: 0.5px; }
+.mini-logo { width: 50px; height: auto; filter: brightness(0) invert(1); }
+.top-nav ul { display: flex; list-style: none; padding: 0; margin: 15px 0 0 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.nav-item { flex: 1; text-align: center; padding: 15px 5px; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; position: relative; transition: all 0.2s ease; }
+.nav-item:hover { color: white; background-color: rgba(255,255,255,0.05); }
+.nav-item.active { color: white; }
+.nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 4px; background-color: white; border-radius: 4px 4px 0 0; }
 
-/* Icono Morado */
-.icon-section {
-  display: flex;
-  align-items: flex-start;
-  padding-top: 5px;
+@media (max-width: 600px) {
+  .nav-item { font-size: 0.65rem; padding: 12px 2px; }
+  .app-title { font-size: 1.1rem; }
+  .mini-logo { width: 40px; }
 }
-
-.bell-icon {
-  width: 32px;
-  height: 32px;
-  fill: #7B1FA2; /* Morado Oscuro (Purple 700) */
-}
-
-/* Contenido de Texto */
-.content-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.aviso-title {
-  margin: 0 0 5px 0;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #000;
-  text-transform: lowercase; /* Para que coincida con tu captura 'aviso' */
-}
-.aviso-title::first-letter {
-  text-transform: uppercase;
-}
-
-.aviso-body {
-  margin: 0 0 10px 0;
-  font-size: 0.9rem;
-  color: #333;
-  line-height: 1.4;
-  /* Limitar líneas si quieres (como en Android) */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Pie de tarjeta (Remitente y Fecha) */
-.aviso-footer {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.75rem;
-  color: #757575; /* Gris */
-  gap: 4px;
-}
-
-.sender {
-  font-style: italic;
-}
-
-/* Estados (Carga y Vacío) */
-.loading-state, .empty-state, .error-msg {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-}
-
-.empty-icon {
-  font-size: 3rem;
-  display: block;
-  margin-bottom: 10px;
-  opacity: 0.5;
-}
-
-.error-msg { color: #D32F2F; }

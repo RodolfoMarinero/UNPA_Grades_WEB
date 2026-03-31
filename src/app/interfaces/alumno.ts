@@ -1,22 +1,23 @@
-export interface Calificaciones {
-  parcial1: number;
-  parcial2: number;
-  parcial3: number;
-  ordinario: number | null;
-  pfinal: number | null;
-  extra1: number | null;
-  extra2: number | null;
-  especial: number | null;
+export interface Calendario {
+  materia: string;
+  e1: string;
+  e2: string;
+  esp: string;
+  f: string;
+  p1: string;
+  p2: string;
+  p3: string;
+  ciclo: string;
 }
 
 export interface Materia {
   clave: string;
   materia: string;
   semestre: number;
-  ciclo: string;
   activo: boolean;
-  calificaciones: Calificaciones;
-  // Puedes agregar calendarioExamenes si lo usas después
+  ciclo: string;
+  calendarioExamenes: Calendario | null; // Puede o no venir
+  calificaciones: any; // O tu interfaz de Calificaciones
 }
 
 export interface AlumnoData {

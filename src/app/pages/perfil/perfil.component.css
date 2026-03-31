@@ -1,172 +1,174 @@
-/* Importamos fuente de Google para el código de barras */
-@import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap');
+/* =========================================
+   1. VARIABLES Y LAYOUT BASE
+========================================= */
+:host {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --primary-dark: #0F4C3A;
+  --bg-app: #EAEAEA;
+  --unpa-teal: #007A66; /* Verde-Cian de la UNPA */
+}
 
-.perfil-container {
-  background-color: #E0F2F1; /* Verde menta Android */
-  min-height: 100vh;
-  padding: 20px;
-  font-family: sans-serif;
+.dashboard-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-app);
 }
 
-/* Barra Superior */
-.top-bar {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.top-bar h1 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #000;
-  margin: 0;
-}
-
-.btn-icon {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #333;
-  padding: 0;
-}
-
-.spacer { width: 24px; }
-
-/* Foto y Nombre */
-.profile-header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.avatar-circle {
-  width: 100px;
-  height: 100px;
-  background-color: #2196F3; /* Azul Material */
-  border-radius: 50%;
-  margin: 0 auto 10px auto;
+.main-content {
+  flex: 1;
+  padding: 40px 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  border: 4px solid rgba(255,255,255,0.8);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.profile-wrapper {
+  width: 100%;
+  max-width: 900px;
+}
+
+/* =========================================
+   2. GRID DEL PERFIL (Dos Columnas)
+========================================= */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: flex-start;
+}
+
+/* --- COLUMNA IZQUIERDA --- */
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
 .student-name {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #000;
-  margin: 0;
-  text-transform: uppercase;
+  margin: 0 0 10px 0;
+  color: #111;
+  line-height: 1.2;
+}
+.student-name .nombre { font-size: 2.2rem; font-weight: 800; display: block; }
+.student-name .apellidos { font-size: 1.6rem; font-weight: 600; display: block; }
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.info-label { font-size: 0.95rem; color: #111; font-weight: 500; }
+.info-value { font-size: 1.3rem; font-weight: 700; color: #111; }
+
+.barcode-container { margin-top: 20px; }
+
+/* --- COLUMNA DERECHA --- */
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
-/* Tarjetas */
-.info-cards {
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: 20px;
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  background-color: #A39B9B; /* Gris del Figma */
+  border-radius: 50%;
 }
 
-.info-card {
-  background: white;
-  border-radius: 8px;
-  padding: 12px 15px;
-  margin-bottom: 10px;
+.documents-list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.doc-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--unpa-teal);
+  transition: opacity 0.2s;
+}
+.doc-item:hover { opacity: 0.7; }
+.doc-item:last-child { border-bottom: none; } /* El diseño solo muestra una línea en medio */
+
+.doc-text { color: var(--unpa-teal); font-weight: 600; font-size: 1.05rem; }
+
+.doc-icon {
+  border: 2px solid var(--unpa-teal);
+  border-radius: 6px;
+  padding: 4px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  justify-content: center;
+  color: var(--unpa-teal);
 }
 
-.icon-box {
-  font-size: 1.2rem;
-  opacity: 0.7;
-}
-
-.info-card .data {
-  display: flex;
-  flex-direction: column;
-}
-
-.info-card label {
-  font-size: 0.75rem;
-  color: #666;
-  margin-bottom: 2px;
-}
-
-.info-card strong {
-  font-size: 0.95rem;
-  color: #333;
-}
-
-/* Botones */
-.btn-outline {
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  padding: 10px 0;
-  font-weight: 600;
-  color: #333;
-  cursor: pointer;
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: 25px;
-  font-size: 0.9rem;
-}
-
-/* Código de Barras */
-.barcode-section {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.barcode-number {
-  display: block;
-  font-size: 0.8rem;
-  color: #333;
-}
-
-.barcode-visual {
-  font-family: 'Libre Barcode 39', cursive;
-  font-size: 3.5rem;
-  line-height: 1;
-  color: #000;
-}
-
-/* Acciones Inferiores */
+/* =========================================
+   3. BOTONES INFERIORES
+========================================= */
 .action-buttons {
-  width: 100%;
-  max-width: 400px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 60px;
 }
 
-.btn-action {
-  background-color: #CFD8DC;
-  border: none;
-  padding: 12px;
-  border-radius: 4px;
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--unpa-teal);
+  color: var(--unpa-teal);
+  border-radius: 30px;
+  padding: 12px 30px;
   font-weight: bold;
-  color: #37474F;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
+  transition: all 0.2s;
+  flex: 1;
+  max-width: 280px;
 }
 
-.btn-primary {
-  background-color: #6200EA; /* Morado fuerte */
+.btn-outline:hover {
+  background-color: var(--unpa-teal);
   color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-  letter-spacing: 1px;
+}
+
+/* Loader */
+.loading-state { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: var(--primary-dark); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
+/* =========================================
+   4. CABECERA UNIVERSAL
+========================================= */
+.main-header { background-color: var(--primary-dark); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.15); flex-shrink: 0; }
+.header-top { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px 0 20px; }
+.app-title { font-size: 1.3rem; font-weight: bold; margin: 0; letter-spacing: 0.5px; }
+.mini-logo { width: 50px; height: auto; filter: brightness(0) invert(1); }
+.top-nav ul { display: flex; list-style: none; padding: 0; margin: 15px 0 0 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.nav-item { flex: 1; text-align: center; padding: 15px 5px; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; cursor: pointer; position: relative; }
+.nav-item.active { color: white; }
+.nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 4px; background-color: white; border-radius: 4px 4px 0 0; }
+
+/* --- RESPONSIVO --- */
+@media (max-width: 768px) {
+  .profile-grid { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+  .left-col, .right-col { align-items: center; }
+  .documents-list { width: 100%; max-width: 400px; }
+  .action-buttons { flex-direction: column; align-items: center; }
+  .btn-outline { width: 100%; max-width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .nav-item { font-size: 0.65rem; padding: 12px 2px; }
+  .app-title { font-size: 1.1rem; }
+  .mini-logo { width: 40px; }
+}
+
+.logoperfil{
+  width: 120px; height: auto;
 }

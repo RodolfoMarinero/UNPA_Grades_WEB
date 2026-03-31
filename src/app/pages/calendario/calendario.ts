@@ -1,8 +1,26 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Auth } from '../../services/auth'; // Asumiendo que aquí harás la petición
-import { Calendario } from '../../interfaces/calendario';
+import { Auth } from '../../services/auth';
+
+// Interfaz para tipar los eventos (Igual a EventoExamen en Android)
+interface EventoExamen {
+  fechaRaw: string;   // Ej: "2026-04-06"
+  dia: number;        // Ej: 6
+  mesNum: number;     // Ej: 3 (Abril, en base 0)
+  mesStr: string;     // Ej: "Abril"
+  materia: string;    // Ej: "Optativa I"
+  tipoExamen: string; // Ej: "1er Parcial"
+}
+
+// Interfaz para construir los meses visuales
+interface MesVisual {
+  nombre: string;
+  anio: number;
+  mesIdx: number;
+  espacios: number[]; // Días en blanco al inicio del mes
+  dias: { num: number, tipo: string }[];
+}
 
 @Component({
   selector: 'app-calendario',
@@ -14,22 +32,161 @@ import { Calendario } from '../../interfaces/calendario';
 export class CalendarioComponent implements OnInit {
 
   private router = inject(Router);
+  private authService = inject(Auth);
 
-  // Datos simulados (Mock) basados en tu imagen para probar el diseño
-  examenes: Calendario[] = [
-    { materia: 'Optativa II', p1: '2025-10-29', p2: '2025-12-03', p3: '2026-01-21', f: '2026-01-30', e1: '2026-02-16', e2: '2026-03-02', esp: '2026-03-12' },
-    { materia: 'Optativa I', p1: '2025-10-30', p2: '2025-12-04', p3: '2026-01-22', f: '2026-02-03', e1: '2026-02-17', e2: '2026-03-03', esp: '2026-03-12' },
-    { materia: 'Investigación de Operaciones', p1: '2025-10-27', p2: '2025-12-01', p3: '2026-01-19', f: '2026-02-06', e1: '2026-02-13', e2: '2026-03-06', esp: '2026-03-12' },
-    { materia: 'Administración de Redes', p1: '2025-10-28', p2: '2025-12-02', p3: '2026-01-20', f: '2026-02-05', e1: '2026-02-18', e2: '2026-03-04', esp: '2026-03-12' },
-    { materia: 'Desarrollo de Videojuegos', p1: '2025-10-31', p2: '2025-12-05', p3: '2026-01-23', f: '2026-02-02', e1: '2026-02-19', e2: '2026-03-05', esp: '2026-03-12' },
-  ];
+  periodo = 'Cargando...';
+  eventos: EventoExamen[] = [];
+
+  // Calendario visual
+  diasSemana = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+  meses: MesVisual[] = [];
+  nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  // Para el Modal (Popup)
+  mostrarModal = false;
+  tituloModal = '';
+  eventosModal: EventoExamen[] = [];
 
   ngOnInit() {
-    // AQUÍ LLAMARÍAS A TU SERVICIO MÁS ADELANTE
-    // this.authService.getCalendario(...).subscribe(data => this.examenes = data);
+    this.procesarFechasDelApi();
   }
 
-  regresar() {
-    this.router.navigate(['/home']);
+  procesarFechasDelApi() {
+    const alumno = this.authService.alumnoActual;
+
+    // Si no hay alumno o no hay materias, salimos
+    if (!alumno || !alumno.materias || alumno.materias.length === 0) {
+      this.periodo = 'No hay materias registradas';
+      return;
+    }
+
+    // Obtener el ciclo más reciente (Igual que en Android)
+    const ciclos = alumno.materias.map(m => m.ciclo).filter(c => c);
+    const cicloActual = ciclos.length > 0 ? ciclos.sort().reverse()[0] : 'Sin Ciclo';
+    this.periodo = cicloActual;
+
+    this.eventos = [];
+
+    // Recorrer las materias del ciclo actual y extraer exámenes
+    alumno.materias.filter(m => m.ciclo === cicloActual).forEach(materia => {
+
+      // 🔥 EL CAMBIO ESTÁ AQUÍ 🔥
+      // Buscamos el objeto de las fechas (revisa si en tu interfaz se llama 'calendario' o 'calendarioExamenes')
+      const fechas = materia.calendarioExamenes; // O puede ser materia.calendario
+
+      if (fechas) {
+        // Usamos las variables que sí guardan las fechas (p1, p2, f, etc.)
+        this.addEvento(fechas.p1, materia.materia, "1er Parcial");
+        this.addEvento(fechas.p2, materia.materia, "2do Parcial");
+        this.addEvento(fechas.p3, materia.materia, "3er Parcial");
+        this.addEvento(fechas.f, materia.materia, "Ordinario");
+        this.addEvento(fechas.e1, materia.materia, "Extraordinario 1");
+        this.addEvento(fechas.e2, materia.materia, "Extraordinario 2");
+        this.addEvento(fechas.esp, materia.materia, "Especial");
+      }
+    });
+
+    // Ordenar cronológicamente (Igual que it.fechaRaw en Android)
+    this.eventos.sort((a, b) => new Date(a.fechaRaw).getTime() - new Date(b.fechaRaw).getTime());
+
+    // Construir el calendario visual basado en los eventos encontrados
+    this.construirCalendarioVisual();
   }
+
+  // Equivalente a tu addEvento() de Android
+  private addEvento(fechaRaw: string | null | undefined, nombreMateria: string, tipoExamen: string) {
+    if (fechaRaw) { // Si la fecha existe y no es null
+      const fechaObj = new Date(fechaRaw);
+
+      // Compensar zona horaria si la fecha viene como "2026-04-06" puro sin T00:00:00
+      fechaObj.setMinutes(fechaObj.getMinutes() + fechaObj.getTimezoneOffset());
+
+      this.eventos.push({
+        fechaRaw: fechaRaw,
+        dia: fechaObj.getDate(),
+        mesNum: fechaObj.getMonth(), // 0-11
+        mesStr: this.nombresMeses[fechaObj.getMonth()].substring(0, 3).toUpperCase(), // "ABR"
+        materia: nombreMateria,
+        tipoExamen: tipoExamen
+      });
+    }
+  }
+
+  // --- LÓGICA DE CONSTRUCCIÓN VISUAL DEL CALENDARIO ---
+  construirCalendarioVisual() {
+    this.meses = [];
+    if (this.eventos.length === 0) return;
+
+    // 1. Encontrar el rango de meses (Desde el primer examen hasta el último)
+    const primerMes = this.eventos[0].mesNum;
+    const primerAnio = new Date(this.eventos[0].fechaRaw).getFullYear();
+
+    const ultimoMes = this.eventos[this.eventos.length - 1].mesNum;
+    const ultimoAnio = new Date(this.eventos[this.eventos.length - 1].fechaRaw).getFullYear();
+
+    let anioActual = primerAnio;
+    let mesActual = primerMes;
+
+    // 2. Iterar y crear las tarjetas de los meses
+    while (anioActual < ultimoAnio || (anioActual === ultimoAnio && mesActual <= ultimoMes)) {
+
+      // Calcular días en blanco al inicio del mes (0 = Dom, 1 = Lun...)
+      const primerDiaDelMes = new Date(anioActual, mesActual, 1).getDay();
+      const espacios = Array(primerDiaDelMes).fill(0);
+
+      // Calcular total de días que tiene ese mes
+      const diasEnElMes = new Date(anioActual, mesActual + 1, 0).getDate();
+
+      // Generar los días y marcar los que tienen evento
+      let diasRenderizados = [];
+      for (let i = 1; i <= diasEnElMes; i++) {
+        // ¿Hay eventos este día?
+        const eventosEsteDia = this.eventos.filter(e => e.dia === i && e.mesNum === mesActual && new Date(e.fechaRaw).getFullYear() === anioActual);
+
+        diasRenderizados.push({
+          num: i,
+          tipo: eventosEsteDia.length > 0 ? 'morado' : 'normal',
+          fechaCompleta: `${anioActual}-${String(mesActual + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}` // Para el clic
+        });
+      }
+
+      this.meses.push({
+        nombre: this.nombresMeses[mesActual].toUpperCase(),
+        anio: anioActual,
+        mesIdx: mesActual,
+        espacios: espacios,
+        dias: diasRenderizados
+      });
+
+      // Avanzar al siguiente mes
+      mesActual++;
+      if (mesActual > 11) {
+        mesActual = 0;
+        anioActual++;
+      }
+    }
+  }
+
+  // Equivalente a onDayClick() de Android
+  onDayClick(dia: any) {
+    if (dia.tipo === 'morado') {
+      // Filtrar los eventos de esa fecha exacta
+      this.eventosModal = this.eventos.filter(e => e.fechaRaw === dia.fechaCompleta);
+
+      if (this.eventosModal.length > 0) {
+        this.tituloModal = `📅 Exámenes del ${this.eventosModal[0].dia} de ${this.nombresMeses[this.eventosModal[0].mesNum]}`;
+        this.mostrarModal = true;
+      }
+    }
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+  }
+
+  // Navegación Universal
+  irAHome() { this.router.navigate(['/home']); }
+  irANotificaciones() { this.router.navigate(['/notificaciones']); }
+  irACalendarioExamenes() { this.router.navigate(['/calendario']); }
+  irAlPerfil() { this.router.navigate(['/perfil']); }
 }

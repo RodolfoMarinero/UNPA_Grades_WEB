@@ -60,4 +60,8 @@ export class NotificacionesComponent implements OnInit {
   regresar() {
     this.router.navigate(['/home']);
   }
+  irAHome() { this.router.navigate(['/home']); }
+  irANotificaciones() { this.router.navigate(['/notificaciones']); }
+  irACalendarioExamenes() { this.router.navigate(['/calendario']); }
+  irAlPerfil() { this.router.navigate(['/perfil']); }
 }

@@ -35,11 +35,9 @@ export class Auth {
         // Si el login es exitoso, guardamos el token
         if (respuesta && respuesta.token) {
           localStorage.setItem('token', respuesta.token);
+          localStorage.setItem('matricula', matricula);
 
           // AQUI ATRAPAMOS EL CAMPUS:
-          // OJO: Cambia "respuesta.campus" por el nombre exacto de la variable
-          // que te está regresando tu backend de Spring Boot en el JSON.
-          // Puede ser respuesta.tenant, respuesta.idCampus, etc.
           if (respuesta.campus) {
             localStorage.setItem('tenant', respuesta.campus);
             console.log('Campus asignado por el backend:', respuesta.campus);
@@ -56,7 +54,7 @@ export class Auth {
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
-      'X-TenantID': tenant // <--- Enviamos el campus que nos dio el backend
+      'X-Campus-ID': tenant // <--- ¡CORREGIDO PARA QUE JAVA LO ENCUENTRE!
     });
 
     return this.http.get<AlumnoData>(
@@ -71,13 +69,13 @@ export class Auth {
 
   // 3. CAMBIAR CONTRASEÑA (Enviando la cabecera del campus)
   cambiarPassword(matricula: string, passActual: string, passNueva: string): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || '';
     const tenant = localStorage.getItem('tenant') || '';
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'X-TenantID': tenant // <--- Enviamos el campus
-    });
+    // Usamos .set() para armar las cabeceras de forma segura
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${token}`)
+      .set('X-Campus-ID', tenant); // <--- ¡CORREGIDO PARA QUE JAVA LO ENCUENTRE!
 
     return this.http.put(
       `${this.baseUrl}/usuarios/cambiarpassword/${matricula}/`,
@@ -98,7 +96,7 @@ export class Auth {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'X-TenantID': tenant // <--- Enviamos el campus
+      'X-Campus-ID': tenant // <--- ¡CORREGIDO PARA QUE JAVA LO ENCUENTRE!
     });
 
     return this.http.get(url, { headers: headers });
@@ -106,8 +104,27 @@ export class Auth {
 
   // EXTRA: Método para cerrar sesión y limpiar todo
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('tenant');
+    // 1. Limpieza nuclear: Borra TODO lo que haya en el almacenamiento (token, tenant, matricula, etc.)
+    localStorage.clear();
+    sessionStorage.clear(); // Por si acaso guardaste algo aquí también
+
+    // 2. Limpiamos la variable del servicio
     this.alumnoActual = null;
+  }
+
+  // Equivale a @GET("reportes/historialacademico")
+  descargarHistorial(matricula: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/reportes/historialacademico`, {
+      params: { matricula: matricula },
+      responseType: 'blob' // MUY IMPORTANTE: Le dice a Angular que no espere un JSON, sino un archivo
+    });
+  }
+
+  // Equivale a @GET("reportes/constanciaestudios")
+  descargarConstancia(matricula: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/reportes/constanciaestudios`, {
+      params: { matricula: matricula },
+      responseType: 'blob' // MUY IMPORTANTE
+    });
   }
 }

@@ -44,8 +44,19 @@
 
         <div class="right-col">
 
-          <div>
-            <img src="assets/logo_unpa.png" alt="Logo UNPA" class="logoperfil">
+          <div class="profile-photo-container">
+            <img
+              [src]="fotoPreview || alumno.fotoPerfilUrl || 'assets/logo_unpa.png'"
+              alt="Foto de perfil"
+              class="profile-photo"
+            />
+          </div>
+
+          <div class="upload-photo-box">
+            <input type="file" accept="image/*" (change)="onFileSelected($event)">
+            <button class="btn-outline" (click)="subirFotoPerfil()" [disabled]="!selectedFile || subiendoFoto">
+              {{ subiendoFoto ? 'Subiendo...' : 'Subir foto' }}
+            </button>
           </div>
 
           <div class="info-group">

@@ -21,6 +21,9 @@ export class PerfilComponent implements OnInit {
   alumno: AlumnoData | null = null;
   promedioGeneral: number = 0.0;
   descargando: boolean = false;
+  selectedFile: File | null = null;
+  fotoPreview: string | null = null;
+  subiendoFoto: boolean = false;
 
   ngOnInit() {
     this.alumno = this.authService.alumnoActual;
@@ -148,6 +151,50 @@ export class PerfilComponent implements OnInit {
         console.error('Error descargando constancia:', err);
         alert('Hubo un error al generar la constancia. Intente más tarde.');
         this.descargando = false;
+      }
+    });
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    if (!file) {
+      this.selectedFile = null;
+      this.fotoPreview = null;
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      alert('Selecciona un archivo de imagen valido.');
+      this.selectedFile = null;
+      this.fotoPreview = null;
+      return;
+    }
+
+    this.selectedFile = file;
+    this.fotoPreview = URL.createObjectURL(file);
+  }
+
+  subirFotoPerfil() {
+    if (!this.alumno || !this.selectedFile) return;
+
+    this.subiendoFoto = true;
+    this.authService.uploadFotoPerfil(this.alumno.matricula, this.selectedFile).subscribe({
+      next: (resp) => {
+        this.alumno = {
+          ...this.alumno!,
+          fotoPerfilUrl: resp.url
+        };
+        this.authService.alumnoActual = this.alumno;
+        this.selectedFile = null;
+        this.fotoPreview = null;
+        this.subiendoFoto = false;
+      },
+      error: (err) => {
+        console.error('Error subiendo foto de perfil:', err);
+        alert('No se pudo subir la foto. Intenta de nuevo.');
+        this.subiendoFoto = false;
       }
     });
   }

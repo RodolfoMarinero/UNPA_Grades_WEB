@@ -28,4 +28,5 @@ export interface AlumnoData {
   nombreCarrera: string;
   esRegular: boolean;
   materias: Materia[];
+  fotoPerfilUrl?: string;
 }

@@ -79,16 +79,34 @@
               type="file"
               accept="image/*"
               capture="user"
-              hidden
+              style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
               (change)="onFileSelected($event)"
             />
             <input
               #galleryInput
               type="file"
               accept="image/*"
-              hidden
+              style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
               (change)="onFileSelected($event)"
             />
+          </div>
+
+          <p class="camera-error" *ngIf="cameraError">{{ cameraError }}</p>
+
+          <div class="camera-modal-backdrop" *ngIf="cameraModalOpen" (click)="closeCameraModal()">
+            <div class="camera-modal" (click)="$event.stopPropagation()">
+              <video #cameraVideo autoplay playsinline muted *ngIf="!cameraCapturedPreview"></video>
+              <img class="camera-captured-preview" *ngIf="cameraCapturedPreview" [src]="cameraCapturedPreview" alt="Vista previa capturada" />
+              <div class="camera-modal-actions" *ngIf="!cameraCapturedPreview">
+                <button type="button" class="btn-outline" (click)="captureFromCamera()">Capturar</button>
+                <button type="button" class="btn-outline" (click)="closeCameraModal()">Cancelar</button>
+              </div>
+              <div class="camera-modal-actions" *ngIf="cameraCapturedPreview">
+                <button type="button" class="btn-outline" (click)="retakeCameraPhoto()">Tomar de nuevo</button>
+                <button type="button" class="btn-outline" (click)="confirmCapturedPhoto()">Usar esta foto</button>
+                <button type="button" class="btn-outline" (click)="closeCameraModal()">Cancelar</button>
+              </div>
+            </div>
           </div>
 
           <div class="upload-photo-box" *ngIf="selectedFile && !subiendoFoto">

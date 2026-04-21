@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
@@ -12,7 +12,7 @@ import { CodigoBarrasComponent } from '../../components/codigo-barras/codigo-bar
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
-export class PerfilComponent implements OnInit {
+export class PerfilComponent implements OnInit, OnDestroy {
 
   private authService = inject(Auth);
   private router = inject(Router);
@@ -20,6 +20,7 @@ export class PerfilComponent implements OnInit {
   @ViewChild('photoMenuRoot') photoMenuRoot?: ElementRef<HTMLElement>;
   @ViewChild('cameraInput') cameraInput?: ElementRef<HTMLInputElement>;
   @ViewChild('galleryInput') galleryInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('cameraVideo') cameraVideo?: ElementRef<HTMLVideoElement>;
 
   alumno: AlumnoData | null = null;
   promedioGeneral: number = 0.0;
@@ -28,6 +29,10 @@ export class PerfilComponent implements OnInit {
   fotoPreview: string | null = null;
   subiendoFoto: boolean = false;
   photoMenuOpen = false;
+  cameraModalOpen = false;
+  cameraError = '';
+  private cameraStream: MediaStream | null = null;
+  cameraCapturedPreview: string | null = null;
 
   ngOnInit() {
     this.alumno = this.authService.alumnoActual;
@@ -38,6 +43,14 @@ export class PerfilComponent implements OnInit {
     }
 
     this.calcularPromedio();
+  }
+
+  ngOnDestroy(): void {
+    this.stopCameraStream();
+    this.clearCapturedPhoto();
+    if (this.fotoPreview) {
+      URL.revokeObjectURL(this.fotoPreview);
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -56,9 +69,135 @@ export class PerfilComponent implements OnInit {
     this.photoMenuOpen = !this.photoMenuOpen;
   }
 
-  openCameraPicker(): void {
+  async openCameraPicker(): Promise<void> {
     this.photoMenuOpen = false;
-    this.cameraInput?.nativeElement.click();
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      this.openCameraInputFallback();
+      return;
+    }
+
+    this.cameraError = '';
+    this.cameraModalOpen = true;
+    this.clearCapturedPhoto();
+
+    await this.startCameraStream();
+  }
+
+  private async startCameraStream(): Promise<void> {
+    this.stopCameraStream();
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user' },
+        audio: false
+      });
+
+      this.cameraStream = stream;
+      setTimeout(() => {
+        const video = this.cameraVideo?.nativeElement;
+        if (!video || !this.cameraStream) return;
+        video.srcObject = this.cameraStream;
+        void video.play();
+      });
+    } catch (error) {
+      console.error('No se pudo abrir la camara:', error);
+      this.cameraError = 'No se pudo abrir la camara. Revisa permisos del navegador.';
+      this.openCameraInputFallback();
+      this.closeCameraModal();
+    }
+  }
+
+  private openCameraInputFallback(): void {
+    const input = this.cameraInput?.nativeElement;
+    if (!input) return;
+
+    const pickerInput = input as HTMLInputElement & { showPicker?: () => void };
+    if (typeof pickerInput.showPicker === 'function') {
+      try {
+        pickerInput.showPicker();
+        return;
+      } catch {
+        // Fallback para navegadores que restringen showPicker().
+      }
+    }
+
+    input.click();
+  }
+
+  closeCameraModal(): void {
+    this.cameraModalOpen = false;
+    this.stopCameraStream();
+    this.clearCapturedPhoto();
+  }
+
+  private stopCameraStream(): void {
+    if (!this.cameraStream) {
+      return;
+    }
+    this.cameraStream.getTracks().forEach(track => track.stop());
+    this.cameraStream = null;
+  }
+
+  captureFromCamera(): void {
+    const video = this.cameraVideo?.nativeElement;
+    if (!video || video.videoWidth === 0 || video.videoHeight === 0 || video.readyState < 2) {
+      return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    if (!dataUrl.startsWith('data:image/')) {
+      return;
+    }
+
+    this.clearCapturedPhoto();
+    this.cameraCapturedPreview = dataUrl;
+    this.stopCameraStream();
+  }
+
+  async retakeCameraPhoto(): Promise<void> {
+    this.clearCapturedPhoto();
+    await this.startCameraStream();
+  }
+
+  confirmCapturedPhoto(): void {
+    if (!this.cameraCapturedPreview) {
+      return;
+    }
+
+    this.selectedFile = this.dataUrlToFile(this.cameraCapturedPreview, `foto-perfil-${Date.now()}.jpg`);
+    if (this.fotoPreview) {
+      URL.revokeObjectURL(this.fotoPreview);
+    }
+    this.fotoPreview = URL.createObjectURL(this.selectedFile);
+    this.clearCapturedPhoto();
+    this.resetFileInputs();
+    this.cameraModalOpen = false;
+  }
+
+  private clearCapturedPhoto(): void {
+    this.cameraCapturedPreview = null;
+  }
+
+  private dataUrlToFile(dataUrl: string, filename: string): File {
+    const [meta, payload] = dataUrl.split(',');
+    const mimeMatch = /data:(.*?);base64/.exec(meta);
+    const mimeType = mimeMatch?.[1] || 'image/jpeg';
+    const binary = atob(payload);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return new File([bytes], filename, { type: mimeType });
   }
 
   openGalleryPicker(): void {
@@ -200,6 +339,9 @@ export class PerfilComponent implements OnInit {
 
     if (!file) {
       this.selectedFile = null;
+      if (this.fotoPreview) {
+        URL.revokeObjectURL(this.fotoPreview);
+      }
       this.fotoPreview = null;
       this.resetFileInputs();
       return;
@@ -208,12 +350,18 @@ export class PerfilComponent implements OnInit {
     if (!file.type.startsWith('image/')) {
       alert('Selecciona un archivo de imagen valido.');
       this.selectedFile = null;
+      if (this.fotoPreview) {
+        URL.revokeObjectURL(this.fotoPreview);
+      }
       this.fotoPreview = null;
       this.resetFileInputs();
       return;
     }
 
     this.selectedFile = file;
+    if (this.fotoPreview) {
+      URL.revokeObjectURL(this.fotoPreview);
+    }
     this.fotoPreview = URL.createObjectURL(file);
     this.resetFileInputs();
   }
@@ -230,6 +378,9 @@ export class PerfilComponent implements OnInit {
         };
         this.authService.alumnoActual = this.alumno;
         this.selectedFile = null;
+        if (this.fotoPreview) {
+          URL.revokeObjectURL(this.fotoPreview);
+        }
         this.fotoPreview = null;
         this.subiendoFoto = false;
       },

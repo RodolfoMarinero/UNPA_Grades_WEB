@@ -150,6 +150,55 @@
   gap: 12px;
 }
 
+.camera-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.camera-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.camera-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  width: min(92vw, 440px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.camera-modal video {
+  width: 100%;
+  border-radius: 12px;
+  background: #000;
+  min-height: 260px;
+  object-fit: cover;
+}
+
+.camera-captured-preview {
+  width: 100%;
+  border-radius: 12px;
+  background: #000;
+  min-height: 260px;
+  object-fit: cover;
+}
+
+.camera-modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
 .documents-list {
   margin-top: 15px;
   display: flex;

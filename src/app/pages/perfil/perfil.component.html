@@ -47,12 +47,6 @@
           <div class="photo-menu-root" #photoMenuRoot>
             <div
               class="profile-photo-container"
-              role="button"
-              tabindex="0"
-              title="Cambiar foto de perfil"
-              (click)="togglePhotoMenu()"
-              (keydown.enter)="togglePhotoMenu()"
-              (keydown.space)="$event.preventDefault(); togglePhotoMenu()"
             >
               <img
                 [src]="fotoPreview || alumno.fotoPerfilUrl || 'assets/logo_unpa.png'"
@@ -60,6 +54,10 @@
                 class="profile-photo"
               />
             </div>
+
+            <button type="button" class="photo-menu-trigger" (click)="togglePhotoMenu()">
+              Cambiar foto de perfil
+            </button>
 
             <div class="photo-menu-dropdown" *ngIf="photoMenuOpen">
               <button type="button" class="photo-menu-item" (click)="openCameraPicker()">

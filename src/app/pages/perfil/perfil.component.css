@@ -84,12 +84,28 @@
   align-items: center;
   justify-content: center;
   background: #f3f3f3;
-  cursor: pointer;
-  outline: none;
 }
 
-.profile-photo-container:focus-visible {
-  box-shadow: 0 0 0 3px rgba(0, 122, 102, 0.45);
+.photo-menu-trigger {
+  margin-top: 10px;
+  border: none;
+  background: transparent;
+  color: var(--unpa-teal);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.photo-menu-trigger:hover {
+  opacity: 0.8;
+}
+
+.photo-menu-trigger:focus-visible {
+  outline: 2px solid var(--unpa-teal);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .photo-menu-dropdown {
@@ -184,6 +200,7 @@
   background: #000;
   min-height: 260px;
   object-fit: cover;
+  transform: scaleX(-1);
 }
 
 .camera-captured-preview {

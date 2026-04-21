@@ -153,6 +153,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Invertimos horizontalmente para que la foto final no quede en modo espejo.
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
     if (!dataUrl.startsWith('data:image/')) {

@@ -9,7 +9,7 @@ RUN mkdir -p /usr/share/nginx/html/vm2/front
 RUN mkdir -p /data/uploads/perfiles
 
 # Copiamos los archivos compilados (Nota la diagonal al final)
-COPY dist/UNPAGradesWEB/browser/ /usr/share/nginx/html/vm2/front/
+COPY dist/UNPAGradesWEB/browser/ /usr/share/nginx/html/vmnpnpm 2/front/
 
 # AQUI ESTA LA MAGIA: Le damos permisos de lectura a los archivos
 RUN chown -R nginx:nginx /usr/share/nginx/html/vm2/front && \

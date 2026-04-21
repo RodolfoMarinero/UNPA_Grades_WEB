@@ -44,16 +44,54 @@
 
         <div class="right-col">
 
-          <div class="profile-photo-container">
-            <img
-              [src]="fotoPreview || alumno.fotoPerfilUrl || 'assets/logo_unpa.png'"
-              alt="Foto de perfil"
-              class="profile-photo"
+          <div class="photo-menu-root" #photoMenuRoot>
+            <div
+              class="profile-photo-container"
+              role="button"
+              tabindex="0"
+              title="Cambiar foto de perfil"
+              (click)="togglePhotoMenu()"
+              (keydown.enter)="togglePhotoMenu()"
+              (keydown.space)="$event.preventDefault(); togglePhotoMenu()"
+            >
+              <img
+                [src]="fotoPreview || alumno.fotoPerfilUrl || 'assets/logo_unpa.png'"
+                alt="Foto de perfil"
+                class="profile-photo"
+              />
+            </div>
+
+            <div class="photo-menu-dropdown" *ngIf="photoMenuOpen">
+              <button type="button" class="photo-menu-item" (click)="openCameraPicker()">
+                <img src="assets/foto.svg" alt="" width="24" height="24" class="menu-icon-img" />
+                <span>Tomar foto</span>
+              </button>
+              <button type="button" class="photo-menu-item" (click)="openGalleryPicker()">
+                <svg class="menu-icon-svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor" aria-hidden="true">
+                  <path d="M360-400h80v-80h-80v80Zm160 0h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h80l80-80h240l80 80h80q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H640l-73-80H393l-73 80H200v560Zm280-260Z"/>
+                </svg>
+                <span>Seleccionar foto</span>
+              </button>
+            </div>
+
+            <input
+              #cameraInput
+              type="file"
+              accept="image/*"
+              capture="user"
+              hidden
+              (change)="onFileSelected($event)"
+            />
+            <input
+              #galleryInput
+              type="file"
+              accept="image/*"
+              hidden
+              (change)="onFileSelected($event)"
             />
           </div>
 
           <div class="upload-photo-box">
-            <input type="file" accept="image/*" (change)="onFileSelected($event)">
             <button class="btn-outline" (click)="subirFotoPerfil()" [disabled]="!selectedFile || subiendoFoto">
               {{ subiendoFoto ? 'Subiendo...' : 'Subir foto' }}
             </button>

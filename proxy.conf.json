@@ -1,10 +1,17 @@
 {
-  "/vm2": {
-    "target": "https://calificaciones.unpa.edu.mx/",
+  "/vm2/fotos-perfil": {
+    "target": "http://localhost:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/vm2": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/vm2": ""
+    }
   }
 }
-
-

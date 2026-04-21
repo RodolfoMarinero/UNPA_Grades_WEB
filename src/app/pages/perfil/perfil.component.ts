@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
@@ -17,6 +17,9 @@ export class PerfilComponent implements OnInit {
   private authService = inject(Auth);
   private router = inject(Router);
 
+  @ViewChild('photoMenuRoot') photoMenuRoot?: ElementRef<HTMLElement>;
+  @ViewChild('cameraInput') cameraInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('galleryInput') galleryInput?: ElementRef<HTMLInputElement>;
 
   alumno: AlumnoData | null = null;
   promedioGeneral: number = 0.0;
@@ -24,6 +27,7 @@ export class PerfilComponent implements OnInit {
   selectedFile: File | null = null;
   fotoPreview: string | null = null;
   subiendoFoto: boolean = false;
+  photoMenuOpen = false;
 
   ngOnInit() {
     this.alumno = this.authService.alumnoActual;
@@ -34,6 +38,41 @@ export class PerfilComponent implements OnInit {
     }
 
     this.calcularPromedio();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.photoMenuOpen) {
+      return;
+    }
+    const root = this.photoMenuRoot?.nativeElement;
+    if (root?.contains(event.target as Node)) {
+      return;
+    }
+    this.photoMenuOpen = false;
+  }
+
+  togglePhotoMenu(): void {
+    this.photoMenuOpen = !this.photoMenuOpen;
+  }
+
+  openCameraPicker(): void {
+    this.photoMenuOpen = false;
+    this.cameraInput?.nativeElement.click();
+  }
+
+  openGalleryPicker(): void {
+    this.photoMenuOpen = false;
+    this.galleryInput?.nativeElement.click();
+  }
+
+  private resetFileInputs(): void {
+    if (this.cameraInput?.nativeElement) {
+      this.cameraInput.nativeElement.value = '';
+    }
+    if (this.galleryInput?.nativeElement) {
+      this.galleryInput.nativeElement.value = '';
+    }
   }
 
   calcularPromedio() {
@@ -162,6 +201,7 @@ export class PerfilComponent implements OnInit {
     if (!file) {
       this.selectedFile = null;
       this.fotoPreview = null;
+      this.resetFileInputs();
       return;
     }
 
@@ -169,11 +209,13 @@ export class PerfilComponent implements OnInit {
       alert('Selecciona un archivo de imagen valido.');
       this.selectedFile = null;
       this.fotoPreview = null;
+      this.resetFileInputs();
       return;
     }
 
     this.selectedFile = file;
     this.fotoPreview = URL.createObjectURL(file);
+    this.resetFileInputs();
   }
 
   subirFotoPerfil() {

@@ -91,10 +91,13 @@
             />
           </div>
 
-          <div class="upload-photo-box">
+          <div class="upload-photo-box" *ngIf="selectedFile && !subiendoFoto">
             <button class="btn-outline" (click)="subirFotoPerfil()" [disabled]="!selectedFile || subiendoFoto">
               {{ subiendoFoto ? 'Subiendo...' : 'Subir foto' }}
             </button>
+          </div>
+          <div class="upload-photo-box" *ngIf="subiendoFoto">
+            <span></span>
           </div>
 
           <div class="info-group">

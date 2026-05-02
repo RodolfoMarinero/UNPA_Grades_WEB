@@ -70,4 +70,8 @@ export class LoginComponent {
   togglePassword() {
     this.passwordVisible = !this.passwordVisible;
   }
+
+  irARecuperarPassword() {
+    this.router.navigate(['/recuperar-password']);
+  }
 }

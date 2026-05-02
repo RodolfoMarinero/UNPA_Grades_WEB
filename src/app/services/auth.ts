@@ -87,6 +87,14 @@ export class Auth {
     );
   }
 
+  solicitarRecuperacionPassword(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/forgot-password`, { email });
+  }
+
+  restablecerPassword(token: string, passwordNueva: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/reset-password`, { token, passwordNueva });
+  }
+
   // 4. OBTENER AVISOS (Enviando la cabecera del campus)
   getAvisos(): Observable<any> {
     const url = `${this.baseUrl}/notificaciones`;

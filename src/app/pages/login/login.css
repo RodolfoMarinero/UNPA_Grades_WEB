@@ -94,11 +94,11 @@
 .forgot-password {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.7);
-  text-align: left;
-  margin-top: -5px;
-  margin-bottom: 30px;
-  margin-left: 10px;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 10px;
   cursor: pointer;
+  width: 100%;
 }
 
 .forgot-password:hover {

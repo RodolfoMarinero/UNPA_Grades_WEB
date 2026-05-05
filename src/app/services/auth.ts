@@ -87,12 +87,16 @@ export class Auth {
     );
   }
 
-  solicitarRecuperacionPassword(email: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/forgot-password`, { email });
+  solicitarRecuperacionPassword(email: string): Observable<string> {
+    return this.http.post(`${this.baseUrl}/auth/forgot-password`, { email }, {
+      responseType: 'text'
+    });
   }
 
-  restablecerPassword(token: string, passwordNueva: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/reset-password`, { token, passwordNueva });
+  restablecerPassword(token: string, passwordNueva: string): Observable<string> {
+    return this.http.post(`${this.baseUrl}/auth/reset-password`, { token, passwordNueva }, {
+      responseType: 'text'
+    });
   }
 
   // 4. OBTENER AVISOS (Enviando la cabecera del campus)

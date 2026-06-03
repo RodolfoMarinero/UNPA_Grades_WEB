@@ -38,6 +38,7 @@
         </div>
       </div>
 
+      <div class="error-message" *ngIf="mensajeError">{{ mensajeError }}</div>
 
       <button type="button" class="btn-login" (click)="onLogin()">
         Iniciar Sesión
@@ -45,6 +46,10 @@
 
       <div class="forgot-password" (click)="irARecuperarPassword()">
         ¿Olvidaste tu contraseña?
+      </div>
+
+      <div class="school-access-link" (click)="irAReportarAccesoNoAutorizado()">
+        Reportar acceso no autorizado
       </div>
 
 

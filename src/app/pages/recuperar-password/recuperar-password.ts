@@ -43,7 +43,9 @@ export class RecuperarPasswordComponent {
         this.mensajeExito = 'Si el correo existe, recibiras un enlace para restablecer tu contrasena.';
       },
       error: (err) => {
-        this.mensajeError = this.obtenerMensajeError(err);
+        const mensaje = this.obtenerMensajeError(err);
+        this.mensajeError = mensaje;
+        alert(mensaje);
       }
     });
   }

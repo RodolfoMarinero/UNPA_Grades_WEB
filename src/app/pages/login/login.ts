@@ -20,11 +20,14 @@ export class LoginComponent {
   matricula: string = '';
   password: string = '';
   passwordVisible: boolean = false;
+  mensajeError = '';
 
   onLogin() {
+    this.mensajeError = '';
+
     // 1. Validar que no estén vacíos
     if (!this.matricula || !this.password) {
-      alert('Por favor llena todos los campos');
+      this.mensajeError = 'Por favor llena todos los campos';
       return;
     }
 
@@ -59,9 +62,13 @@ export class LoginComponent {
         console.error('Error:', error);
 
         if (error.status === 401) {
-          alert('Credenciales incorrectas. Verifica tu matrícula o contraseña.');
+          this.mensajeError = 'Credenciales incorrectas. Verifica tu matricula o contraseña.';
+        } else if (error.status === 403) {
+          this.mensajeError = typeof error.error === 'string'
+            ? error.error
+            : 'Tu cuenta esta bloqueada. Contacta a servicios escolares.';
         } else {
-          alert('Error de conexión con el servidor. ¿Está encendido Spring Boot?');
+          this.mensajeError = 'Error de conexion con el servidor. Verifica que Spring Boot este activo.';
         }
       }
     });
@@ -73,5 +80,9 @@ export class LoginComponent {
 
   irARecuperarPassword() {
     this.router.navigate(['/recuperar-password']);
+  }
+
+  irAReportarAccesoNoAutorizado() {
+    this.router.navigate(['/reportar-acceso-no-autorizado']);
   }
 }

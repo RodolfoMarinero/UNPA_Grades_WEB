@@ -1,4 +1,4 @@
-import {Component, OnInit, inject, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectorRef, HostListener} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
@@ -20,6 +20,9 @@ export class NotificacionesComponent implements OnInit {
   avisos: Aviso[] = [];
   cargando: boolean = true;
   mensajeError: string = '';
+  mensajeExito: string = '';
+  matricula: string = '';
+  menuAbiertoKey: string | null = null;
 
   ngOnInit() {
     console.log('🏁 Componente Notificaciones INICIADO');
@@ -28,17 +31,20 @@ export class NotificacionesComponent implements OnInit {
 
   cargarNotificaciones() {
     this.cargando = true;
-    const matricula = this.authService.alumnoActual?.matricula || '00000000';
+    this.matricula = localStorage.getItem('matricula') || this.authService.alumnoActual?.matricula || '';
+    if (!this.matricula) {
+      this.cargando = false;
+      this.mensajeError = 'No se encontró la matrícula del alumno';
+      this.cdr.detectChanges();
+      return;
+    }
 
-    this.authService.getAvisos().subscribe({
+    this.authService.getAvisosNoLeidos(this.matricula).subscribe({
       next: (data: any) => {
-        // ... (Tu lógica de mapeo que ya funciona bien) ...
-
-        // ASEGURATE DE QUE EL MAPEO USE 'item.aviso' (el campo de tu BD)
         this.avisos = data.map((item: any) => ({
           ...item,
-          titulo: `Aviso Escolar`, // O lo que prefieras
-          aviso: item.aviso,       // IMPORTANTE: Tu Android dice que se llama 'aviso'
+          titulo: `Aviso Escolar`,
+          aviso: item.aviso,
           remitente: 'Servicios Escolares',
           leido: false
         }));
@@ -55,6 +61,57 @@ export class NotificacionesComponent implements OnInit {
         this.cdr.detectChanges(); // 3. AQUÍ TAMBIÉN
       }
     });
+  }
+
+  marcarComoLeido(aviso: Aviso) {
+    if (!this.matricula) return;
+    this.menuAbiertoKey = null;
+
+    this.authService.marcarAvisoComoLeido(this.matricula, {
+      idAvi: aviso.id,
+      cicloId: aviso.cicloId,
+      periodoId: aviso.periodoId
+    }).subscribe({
+      next: () => {
+        this.avisos = this.avisos.filter(a =>
+          !(a.id === aviso.id && a.cicloId === aviso.cicloId && a.periodoId === aviso.periodoId)
+        );
+        this.mensajeExito = 'Aviso marcado como leído';
+        setTimeout(() => {
+          this.mensajeExito = '';
+          this.cdr.detectChanges();
+        }, 1800);
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.mensajeError = 'No se pudo marcar el aviso como leído';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  toggleMenu(event: Event, aviso: Aviso) {
+    event.stopPropagation();
+    const key = this.crearMenuKey(aviso);
+    this.menuAbiertoKey = this.menuAbiertoKey === key ? null : key;
+  }
+
+  estaMenuAbierto(aviso: Aviso): boolean {
+    return this.menuAbiertoKey === this.crearMenuKey(aviso);
+  }
+
+  onMarcarLeidoDesdeMenu(event: Event, aviso: Aviso) {
+    event.stopPropagation();
+    this.marcarComoLeido(aviso);
+  }
+
+  @HostListener('document:click')
+  cerrarMenu() {
+    this.menuAbiertoKey = null;
+  }
+
+  private crearMenuKey(aviso: Aviso): string {
+    return `${aviso.id}-${aviso.cicloId}-${aviso.periodoId}`;
   }
 
   regresar() {

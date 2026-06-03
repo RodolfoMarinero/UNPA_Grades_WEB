@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AlumnoData } from '../interfaces/alumno';
+import { ReporteAccesoNoAutorizado } from '../interfaces/reporte-acceso';
 
 @Injectable({
   providedIn: 'root'
@@ -100,8 +101,8 @@ export class Auth {
   }
 
   // 4. OBTENER AVISOS (Enviando la cabecera del campus)
-  getAvisos(): Observable<any> {
-    const url = `${this.baseUrl}/notificaciones`;
+  getAvisosNoLeidos(matricula: string): Observable<any> {
+    const url = `${this.baseUrl}/notificaciones/no-leidos`;
     const token = localStorage.getItem('token');
     const tenant = localStorage.getItem('tenant') || '';
 
@@ -111,7 +112,45 @@ export class Auth {
       'X-Campus-ID': tenant // <--- ¡CORREGIDO PARA QUE JAVA LO ENCUENTRE!
     });
 
-    return this.http.get(url, { headers: headers });
+    return this.http.get(url, {
+      headers: headers,
+      params: { matricula }
+    });
+  }
+
+  marcarAvisoComoLeido(matricula: string, aviso: { idAvi: number; cicloId: string; periodoId: string }): Observable<void> {
+    const url = `${this.baseUrl}/notificaciones/leer`;
+    const token = localStorage.getItem('token');
+    const tenant = localStorage.getItem('tenant') || '';
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'X-Campus-ID': tenant
+    });
+
+    return this.http.post<void>(url, aviso, {
+      headers,
+      params: { matricula }
+    });
+  }
+
+  solicitarCodigoReporteAcceso(matricula: string, captchaToken: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.baseUrl}/seguridad/reportes-acceso-no-autorizado/solicitar-codigo`,
+      { matricula, captchaToken }
+    );
+  }
+
+  validarCodigoReporteAcceso(
+    matricula: string,
+    codigo: string,
+    detalle: string
+  ): Observable<{ message: string; reporte: ReporteAccesoNoAutorizado }> {
+    return this.http.post<{ message: string; reporte: ReporteAccesoNoAutorizado }>(
+      `${this.baseUrl}/seguridad/reportes-acceso-no-autorizado/validar-codigo`,
+      { matricula, codigo, detalle }
+    );
   }
 
   // EXTRA: Método para cerrar sesión y limpiar todo

@@ -52,6 +52,7 @@
   flex: 1; border-radius: 20px; padding: 18px 20px; color: white;
   display: flex; align-items: flex-start; gap: 15px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;
+  position: relative;
 }
 .aviso-pill:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
 
@@ -65,18 +66,64 @@
 /* Contenido interno */
 .icon-section { display: flex; align-items: center; justify-content: center; margin-top: 2px; }
 .bell-icon { width: 24px; height: 24px; fill: white; }
-.content-section { display: flex; flex-direction: column; }
+.content-section { display: flex; flex-direction: column; width: 100%; padding-right: 28px; }
 .aviso-title { margin: 0 0 5px 0; font-size: 1.05rem; font-weight: bold; }
 .aviso-title::first-letter { text-transform: uppercase; }
 .aviso-body { margin: 0 0 8px 0; font-size: 0.9rem; line-height: 1.4; opacity: 0.95; }
 .sender { font-size: 0.75rem; font-style: italic; opacity: 0.7; }
 
 /* Estados */
-.loading-state, .empty-state, .error-msg { text-align: center; padding: 50px 20px; color: #666; display: flex; flex-direction: column; align-items: center; }
+.loading-state, .empty-state, .error-msg, .success-msg { text-align: center; padding: 50px 20px; color: #666; display: flex; flex-direction: column; align-items: center; }
 .spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: var(--primary-dark); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .empty-icon { font-size: 3rem; display: block; margin-bottom: 15px; opacity: 0.5; }
 .error-msg { color: #D32F2F; font-weight: bold; }
+.success-msg { color: #1B5E20; font-weight: 700; padding: 10px; margin-top: -8px; margin-bottom: 4px; }
+
+.aviso-menu { position: absolute; top: 10px; right: 10px; z-index: 2; }
+.menu-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+.menu-btn span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  display: block;
+}
+.menu-btn:hover { background: rgba(255,255,255,0.25); }
+
+.menu-dropdown {
+  position: absolute;
+  top: 34px;
+  right: 0;
+  background: #fff;
+  border-radius: 10px;
+  min-width: 160px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+.menu-item {
+  width: 100%;
+  border: none;
+  background: #fff;
+  color: #1f1f1f;
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.menu-item:hover { background: #F2F2F2; }
 
 @media (max-width: 600px) {
   .aviso-wrapper { flex-direction: column; align-items: flex-start; gap: 5px; }

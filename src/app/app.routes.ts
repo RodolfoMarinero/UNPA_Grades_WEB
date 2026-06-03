@@ -7,6 +7,7 @@ import {NotificacionesComponent} from './pages/notificaciones/notificaciones.com
 import {CalendarioComponent} from './pages/calendario/calendario';
 import { RecuperarPasswordComponent } from './pages/recuperar-password/recuperar-password';
 import { RestablecerPasswordComponent } from './pages/restablecer-password/restablecer-password';
+import { ReportarAccesoNoAutorizadoComponent } from './pages/reportar-acceso-no-autorizado/reportar-acceso-no-autorizado';
 
 export const routes: Routes = [
   // Si la dirección está vacía, llévame al Login
@@ -22,6 +23,8 @@ export const routes: Routes = [
   {path: 'recuperar-password', component: RecuperarPasswordComponent},
 
   {path: 'restablecer-password', component: RestablecerPasswordComponent},
+
+  {path: 'reportar-acceso-no-autorizado', component: ReportarAccesoNoAutorizadoComponent},
 
   { path: 'notificaciones', component: NotificacionesComponent},
 

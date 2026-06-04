@@ -17,28 +17,30 @@
       </div>
 
       <div class="input-container password-container">
-        <input
-          [type]="passwordVisible ? 'text' : 'password'"
-          placeholder="Contraseña"
-          [(ngModel)]="password"
-          name="password"
-          class="unpa-input"
-        >
+        <div class="password-field">
+          <input
+            [type]="passwordVisible ? 'text' : 'password'"
+            placeholder="Contraseña"
+            [(ngModel)]="password"
+            name="password"
+            class="unpa-input"
+          >
 
-        <div class="eye-icon" (click)="togglePassword()">
-          <svg *ngIf="passwordVisible" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-          <svg *ngIf="!passwordVisible" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-            <line x1="1" y1="1" x2="23" y2="23"></line>
-          </svg>
+          <div class="eye-icon" (click)="togglePassword()">
+            <svg *ngIf="passwordVisible" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg *ngIf="!passwordVisible" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </div>
         </div>
-      </div>
 
-      <div class="error-message" *ngIf="mensajeError">{{ mensajeError }}</div>
+        <div class="error-message" *ngIf="mensajeError">{{ mensajeError }}</div>
+      </div>
 
       <button type="button" class="btn-login" (click)="onLogin()">
         Iniciar Sesión

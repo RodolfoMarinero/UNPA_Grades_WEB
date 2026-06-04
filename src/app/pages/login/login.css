@@ -72,8 +72,13 @@
 }
 
 /* Icono del ojo */
-.password-container {
+.password-field {
   position: relative;
+}
+
+.password-container .error-message {
+  margin: 10px 0 0;
+  padding: 0 4px;
 }
 
 .eye-icon {
@@ -94,7 +99,7 @@
   font-size: 0.82rem;
   color: #ff5252;
   text-align: center;
-  margin: -4px 0 14px;
+  margin: 6px 0 16px;
   line-height: 1.35;
   font-weight: 600;
 }

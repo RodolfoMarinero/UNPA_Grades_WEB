@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'; // <--- Agrega inject
+import { ChangeDetectorRef, Component, inject } from '@angular/core'; // <--- Agrega inject
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../services/auth'; // <--- Importar tu servicio
@@ -16,6 +16,7 @@ export class LoginComponent {
   // Inyectamos el servicio de Auth y el Router
   private authService = inject(Auth);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   matricula: string = '';
   password: string = '';
@@ -28,6 +29,7 @@ export class LoginComponent {
     // 1. Validar que no estén vacíos
     if (!this.matricula || !this.password) {
       this.mensajeError = 'Por favor llena todos los campos';
+      this.cdr.detectChanges();
       return;
     }
 
@@ -58,20 +60,31 @@ export class LoginComponent {
         }
       },
       error: (error) => {
-        // SI ALGO SALE MAL (Código 401 o 500)
         console.error('Error:', error);
-
-        if (error.status === 401) {
-          this.mensajeError = 'Credenciales incorrectas. Verifica tu matricula o contraseña.';
-        } else if (error.status === 403) {
-          this.mensajeError = typeof error.error === 'string'
-            ? error.error
-            : 'Tu cuenta esta bloqueada. Contacta a servicios escolares.';
-        } else {
-          this.mensajeError = 'Error de conexion con el servidor. Verifica que Spring Boot este activo.';
-        }
+        this.mensajeError = this.obtenerMensajeError(error);
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  private obtenerMensajeError(error: any): string {
+    if (error?.status === 401) {
+      return 'Credenciales incorrectas. Verifica tu matricula o contraseña.';
+    }
+    if (error?.status === 403) {
+      const cuerpo = error?.error;
+      if (typeof cuerpo === 'string' && cuerpo.trim()) {
+        return cuerpo;
+      }
+      if (cuerpo?.message) {
+        return cuerpo.message;
+      }
+      return 'Tu cuenta esta bloqueada. Contacta a servicios escolares.';
+    }
+    if (error?.status === 0) {
+      return 'Error de conexion con el servidor. Verifica que Spring Boot este activo.';
+    }
+    return 'Error de conexion con el servidor. Verifica que Spring Boot este activo.';
   }
 
   togglePassword() {

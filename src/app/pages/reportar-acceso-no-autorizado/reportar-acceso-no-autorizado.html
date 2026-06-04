@@ -1,0 +1,69 @@
+<div class="wrapper">
+  <div class="card">
+    <h2>Reportar acceso no autorizado</h2>
+
+    <div class="success" *ngIf="mensajeExito">{{ mensajeExito }}</div>
+    <div class="warning" *ngIf="mensajeBloqueo">{{ mensajeBloqueo }}</div>
+    <div class="error" *ngIf="mensajeError">{{ mensajeError }}</div>
+
+    <ng-container *ngIf="!reporteEnviado">
+      <p class="description">
+        Ingresa tu matricula para enviar un codigo de verificacion al correo registrado.
+      </p>
+
+      <input
+        type="text"
+        [(ngModel)]="matricula"
+        placeholder="Matricula"
+        class="input"
+        [disabled]="enviandoCodigo || enviandoReporte || codigoEnviado"
+      />
+
+      <div class="captcha-box" *ngIf="!codigoEnviado">
+        <div id="recaptcha-container" class="recaptcha-container"></div>
+      </div>
+
+      <button
+        class="btn"
+        (click)="solicitarCodigo()"
+        [disabled]="enviandoCodigo || enviandoReporte || codigoEnviado || !recaptchaListo">
+        {{ enviandoCodigo ? 'Enviando codigo...' : 'Enviar codigo de verificacion' }}
+      </button>
+
+      <div class="otp-section" *ngIf="mostrarSeccionCodigo">
+        <h3 class="otp-title">Ingresa el codigo que recibiste por correo</h3>
+        <input
+          type="text"
+          [(ngModel)]="codigo"
+          placeholder="Codigo de 6 digitos"
+          maxlength="6"
+          class="input"
+          [disabled]="enviandoReporte"
+        />
+
+       <textarea
+          [(ngModel)]="detalle"
+          placeholder="Detalle breve del acceso no autorizado (opcional)"
+          class="input text-area"
+          [disabled]="enviandoReporte"
+        ></textarea> 
+
+        <button class="btn danger" (click)="enviarReporte()" [disabled]="enviandoReporte">
+          {{ enviandoReporte ? 'Enviando reporte...' : 'Enviar reporte' }}
+        </button>
+      </div>
+    </ng-container>
+
+    <div class="success-panel" *ngIf="reporteEnviado">
+      <p>Tu reporte quedo registrado con estatus <strong>Pendiente</strong>.</p>
+      <p>Servicios escolares bloqueara tu cuenta para protegerla hasta que se resuelva el problema.</p>
+    </div>
+
+    <button
+      class="btn secondary"
+      (click)="volverLogin()"
+      [disabled]="enviandoCodigo || enviandoReporte">
+      Volver al login
+    </button>
+  </div>
+</div>

@@ -1,0 +1,355 @@
+:host {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --primary-dark: #0F4C3A;
+  --bg-app: #EAEAEA;
+  --unpa-teal: #007A66;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.credential-page {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.credential-card {
+  background: linear-gradient(160deg, #ffffff 0%, #f4f8f7 100%);
+  border: 2px solid var(--unpa-teal);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.credential-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  background: var(--primary-dark);
+  color: #fff;
+}
+
+.credential-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.credential-institution {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.credential-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.credential-subtitle {
+  font-size: 0.82rem;
+  opacity: 0.9;
+}
+
+.credential-card-body {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 18px;
+  padding: 22px 20px 24px;
+  align-items: start;
+}
+
+.credential-photo-frame {
+  width: 150px;
+  aspect-ratio: 3 / 4;
+  border: 3px solid var(--unpa-teal);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #dfe7e4;
+}
+
+.credential-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.credential-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.credential-name {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #111;
+  line-height: 1.2;
+}
+
+.credential-surname {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.credential-matricula {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.credential-barcode {
+  margin-top: 10px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.credential-photo-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.credential-photo-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #444;
+  max-width: 420px;
+}
+
+.photo-menu-root {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-menu-trigger {
+  border: 2px solid var(--unpa-teal);
+  background: #fff;
+  color: var(--unpa-teal);
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.photo-menu-trigger:hover {
+  background: #f2faf8;
+}
+
+.photo-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #d5d5d5;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 20;
+  overflow: hidden;
+}
+
+.photo-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.photo-menu-item:hover {
+  background: #f5f5f5;
+}
+
+.menu-icon-img,
+.menu-icon-svg {
+  flex-shrink: 0;
+}
+
+.camera-error {
+  margin: 0;
+  color: #b00020;
+  font-size: 0.9rem;
+}
+
+.upload-photo-box {
+  min-height: 24px;
+}
+
+.uploading-label {
+  color: var(--unpa-teal);
+  font-weight: 700;
+}
+
+.btn-outline {
+  border: 2px solid var(--unpa-teal);
+  background: var(--unpa-teal);
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.camera-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.camera-modal {
+  width: min(100%, 380px);
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.camera-modal-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.camera-modal-hint {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #555;
+}
+
+.camera-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #111;
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.face-guide {
+  position: absolute;
+  inset: 12% 18%;
+  border: 2px dashed rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.25);
+}
+
+.camera-captured-preview {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.camera-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.loading-state {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid #ddd;
+  border-top-color: var(--unpa-teal);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.main-header { background-color: var(--primary-dark); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.15); flex-shrink: 0; }
+.header-top { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px 0 20px; }
+.app-title { font-size: 1.3rem; font-weight: bold; margin: 0; letter-spacing: 0.5px; }
+.mini-logo { width: 50px; height: auto; filter: brightness(0) invert(1); }
+.top-nav ul { display: flex; list-style: none; padding: 0; margin: 15px 0 0 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.nav-item { flex: 1; text-align: center; padding: 15px 5px; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; position: relative; transition: all 0.2s ease; }
+.nav-item:hover { color: white; background-color: rgba(255,255,255,0.05); }
+.nav-item.active { color: white; }
+.nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 4px; background-color: white; border-radius: 4px 4px 0 0; }
+
+@media (max-width: 600px) {
+  .nav-item { font-size: 0.65rem; padding: 12px 2px; }
+  .app-title { font-size: 1.1rem; }
+  .mini-logo { width: 40px; }
+}
+
+@media (max-width: 560px) {
+  .credential-card-body {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .credential-details {
+    align-items: center;
+  }
+}

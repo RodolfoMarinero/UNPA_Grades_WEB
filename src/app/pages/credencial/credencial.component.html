@@ -1,0 +1,142 @@
+<div class="dashboard-container" *ngIf="alumno">
+
+  <header class="main-header">
+    <div class="header-top">
+      <h1 class="app-title">UNPA Grades</h1>
+      <img src="assets/logo_unpa.png" alt="Logo UNPA" class="mini-logo">
+    </div>
+
+    <nav class="top-nav">
+      <ul>
+        <li class="nav-item" (click)="irAHome()">CALIFICACIONES</li>
+        <li class="nav-item" (click)="irANotificaciones()">NOTIFICACIONES</li>
+        <li class="nav-item" (click)="irACalendarioExamenes()">CALENDARIO</li>
+        <li class="nav-item" (click)="irAlCorcho()">CORCHO</li>
+        <li class="nav-item" (click)="irAlPerfil()">PERFIL</li>
+        <li class="nav-item active" (click)="irACredencial()">CREDENCIAL</li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <div class="credential-page">
+
+      <div class="credential-card">
+        <div class="credential-card-header">
+          <img src="assets/logo_unpa.png" alt="Logo UNPA" class="credential-logo">
+          <div class="credential-institution">
+            <span class="credential-title">Universidad del Papaloapan</span>
+            <span class="credential-subtitle">Credencial digital del alumno</span>
+          </div>
+        </div>
+
+        <div class="credential-card-body">
+          <div class="credential-photo-frame">
+            <img
+              [src]="fotoPreview || alumno.fotoCredencialUrl || 'assets/logo_unpa.png'"
+              alt="Foto de credencial"
+              class="credential-photo"
+            />
+          </div>
+
+          <div class="credential-details">
+            <h2 class="credential-name">{{ alumno.nombre }}</h2>
+            <p class="credential-surname">{{ alumno.apPaterno }} {{ alumno.apMaterno }}</p>
+            <p class="credential-matricula">Matricula: {{ alumno.matricula }}</p>
+            <div class="credential-barcode">
+              <app-codigo-barras [valor]="alumno.matricula"></app-codigo-barras>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="credential-photo-actions">
+        <p class="credential-photo-hint">
+          Usa una foto formal con rostro centrado. Se recortara automaticamente al formato credencial (3:4).
+        </p>
+
+        <div class="photo-menu-root" #photoMenuRoot>
+          <button type="button" class="photo-menu-trigger" (click)="togglePhotoMenu()">
+            Actualizar foto de credencial
+          </button>
+
+          <div class="photo-menu-dropdown" *ngIf="photoMenuOpen">
+            <button type="button" class="photo-menu-item" (click)="openCameraPicker()">
+              <img src="assets/foto.svg" alt="" width="24" height="24" class="menu-icon-img" />
+              <span>Tomar foto</span>
+            </button>
+            <button type="button" class="photo-menu-item" (click)="openGalleryPicker()">
+              <svg class="menu-icon-svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor" aria-hidden="true">
+                <path d="M360-400h80v-80h-80v80Zm160 0h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h80l80-80h240l80 80h80q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H640l-73-80H393l-73 80H200v560Zm280-260Z"/>
+              </svg>
+              <span>Seleccionar archivo</span>
+            </button>
+          </div>
+
+          <input
+            #cameraInput
+            type="file"
+            accept="image/*"
+            capture="user"
+            style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
+            (change)="onFileSelected($event)"
+          />
+          <input
+            #galleryInput
+            type="file"
+            accept="image/*"
+            style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+
+        <p class="camera-error" *ngIf="cameraError">{{ cameraError }}</p>
+
+        <div class="upload-photo-box" *ngIf="selectedFile && !subiendoFoto">
+          <button class="btn-outline" (click)="subirFotoCredencial()" [disabled]="subiendoFoto">
+            Guardar foto de credencial
+          </button>
+        </div>
+        <div class="upload-photo-box" *ngIf="subiendoFoto">
+          <span class="uploading-label">Guardando foto...</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<div class="camera-modal-backdrop" *ngIf="cameraModalOpen" (click)="closeCameraModal()">
+  <div class="camera-modal" (click)="$event.stopPropagation()">
+    <p class="camera-modal-title">Foto formal para credencial</p>
+    <p class="camera-modal-hint">Centra tu rostro dentro del marco</p>
+
+    <div class="camera-viewport" *ngIf="!cameraCapturedPreview">
+      <video #cameraVideo class="camera-video" autoplay playsinline muted></video>
+      <div class="face-guide" aria-hidden="true"></div>
+    </div>
+
+    <img
+      class="camera-captured-preview"
+      *ngIf="cameraCapturedPreview"
+      [src]="cameraCapturedPreview"
+      alt="Vista previa de credencial"
+    />
+
+    <div class="camera-modal-actions" *ngIf="!cameraCapturedPreview">
+      <button type="button" class="btn-outline" (click)="captureFromCamera()">Capturar</button>
+      <button type="button" class="btn-outline" (click)="closeCameraModal()">Cancelar</button>
+    </div>
+    <div class="camera-modal-actions" *ngIf="cameraCapturedPreview">
+      <button type="button" class="btn-outline" (click)="retakeCameraPhoto()">Tomar de nuevo</button>
+      <button type="button" class="btn-outline" (click)="confirmCapturedPhoto()">Usar esta foto</button>
+      <button type="button" class="btn-outline" (click)="closeCameraModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!alumno" class="loading-state">
+  <div class="spinner"></div>
+  <p>Cargando credencial...</p>
+</div>

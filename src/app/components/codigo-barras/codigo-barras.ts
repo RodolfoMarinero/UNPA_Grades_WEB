@@ -30,7 +30,7 @@ export class CodigoBarrasComponent implements OnChanges, AfterViewInit {
       lineColor: "#000000",
       width: 2,                // Grosor de las barras
       height: 80,              // Altura
-      displayValue: true,      // Muestra el número abajo
+      displayValue: false,
       fontOptions: "bold",
       margin: 10
     });

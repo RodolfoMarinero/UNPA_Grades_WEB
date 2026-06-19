@@ -188,5 +188,7 @@ export class CalendarioComponent implements OnInit {
   irAHome() { this.router.navigate(['/home']); }
   irANotificaciones() { this.router.navigate(['/notificaciones']); }
   irACalendarioExamenes() { this.router.navigate(['/calendario']); }
+  irAlCorcho() { this.router.navigate(['/corcho']); }
   irAlPerfil() { this.router.navigate(['/perfil']); }
+  irACredencial(){ this.router.navigate(['/credencial']); }
 }

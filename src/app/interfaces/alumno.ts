@@ -29,4 +29,5 @@ export interface AlumnoData {
   esRegular: boolean;
   materias: Materia[];
   fotoPerfilUrl?: string;
+  fotoCredencialUrl?: string;
 }

@@ -198,4 +198,22 @@ export class Auth {
       { headers }
     );
   }
+
+  uploadFotoCredencial(matricula: string, file: File): Observable<{ url: string }> {
+    const token = localStorage.getItem('token') || '';
+    const tenant = localStorage.getItem('tenant') || '';
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${token}`)
+      .set('X-Campus-ID', tenant);
+
+    return this.http.post<{ url: string }>(
+      `${this.baseUrl}/usuarios/${matricula}/foto-credencial`,
+      formData,
+      { headers }
+    );
+  }
 }

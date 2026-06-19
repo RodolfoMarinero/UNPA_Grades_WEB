@@ -7,6 +7,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Creamos la ruta exacta
 RUN mkdir -p /usr/share/nginx/html/vm2/front
 RUN mkdir -p /data/uploads/perfiles
+RUN mkdir -p /data/uploads/credenciales
 
 # Copiamos los archivos compilados (Nota la diagonal al final)
 COPY dist/UNPAGradesWEB/browser/ /usr/share/nginx/html/vmnpnpm 2/front/

@@ -11,7 +11,9 @@
         <li class="nav-item" (click)="irAHome()">CALIFICACIONES</li>
         <li class="nav-item" (click)="irANotificaciones()">NOTIFICACIONES</li>
         <li class="nav-item" (click)="irACalendarioExamenes()">CALENDARIO</li>
+        <li class="nav-item" (click)="irAlCorcho()">CORCHO</li>
         <li class="nav-item active" (click)="irAlPerfil()">PERFIL</li>
+        <li class="nav-item" (click)="irACredencial()">CREDENCIAL</li>
       </ul>
     </nav>
   </header>
@@ -21,29 +23,14 @@
 
       <div class="profile-grid">
 
-        <div class="left-col">
+        <div class="left-col-top">
           <h2 class="student-name">
             <span class="nombre">{{ alumno.nombre }}</span>
             <span class="apellidos">{{ alumno.apPaterno }} {{ alumno.apMaterno }}</span>
           </h2>
-
-          <div class="info-group">
-            <span class="info-label">Carrera:</span>
-            <span class="info-value">{{ alumno.nombreCarrera }}</span>
-          </div>
-
-          <div class="info-group">
-            <span class="info-label">Promedio:</span>
-            <span class="info-value">{{ promedioGeneral | number:'1.1-1' }}</span>
-          </div>
-
-          <div class="barcode-container">
-            <app-codigo-barras [valor]="alumno.matricula"></app-codigo-barras>
-          </div>
         </div>
 
-        <div class="right-col">
-
+        <div class="right-col-top">
           <div class="photo-menu-root" #photoMenuRoot>
             <div
               class="profile-photo-container"
@@ -115,7 +102,21 @@
           <div class="upload-photo-box" *ngIf="subiendoFoto">
             <span></span>
           </div>
+        </div>
 
+        <div class="left-col-bottom">
+          <div class="info-group">
+            <span class="info-label">Carrera:</span>
+            <span class="info-value">{{ alumno.nombreCarrera }}</span>
+          </div>
+
+          <div class="info-group">
+            <span class="info-label">Promedio:</span>
+            <span class="info-value">{{ promedioGeneral | number:'1.1-1' }}</span>
+          </div>
+        </div>
+
+        <div class="right-col-bottom">
           <div class="info-group">
             <span class="info-label">Matrícula:</span>
             <span class="info-value">{{ alumno.matricula }}</span>
@@ -136,7 +137,6 @@
               </div>
             </div>
           </div>
-
         </div>
 
       </div>

@@ -1,4 +1,16 @@
 {
+  "/api/corcho": {
+    "target": "http://localhost:8181",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/vm2/fotos-credencial": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
   "/vm2/fotos-perfil": {
     "target": "http://localhost:8080",
     "secure": false,

@@ -114,10 +114,14 @@ export class Home implements OnInit {
     return (p1 + p2 + p3) / 3;
   }
 
+
+
   irAlPerfil() { this.router.navigate(['/perfil']); }
   irANotificaciones() { this.router.navigate(['/notificaciones']); }
   irACalendarioExamenes() { this.router.navigate(['/calendario']); }
+  irAlCorcho() { this.router.navigate(['/corcho']); }
 
+  irACredencial(){ this.router.navigate(['/credencial']); }
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('matricula');
